@@ -25,7 +25,7 @@ export function MetricCard({
   return (
     <div
       className={cn(
-        "card-glass p-5",
+        "card-glass p-5 transition-transform duration-200 hover:-translate-y-0.5",
         compact && "p-3.5",
         className
       )}
@@ -37,7 +37,7 @@ export function MetricCard({
           </p>
           <p
             className={cn(
-              "font-bold text-[color:var(--foreground)] mt-1 tracking-tight",
+              "num font-bold text-[color:var(--foreground)] mt-1 tracking-tight",
               compact ? "text-xl" : "text-2xl"
             )}
           >

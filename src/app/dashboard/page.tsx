@@ -1,10 +1,9 @@
 "use client";
 
 import { MetricCard } from "@/components/ui/MetricCard";
-import { PageHeader } from "@/components/ui/PageHeader";
 import { DemoModeBanner } from "@/components/ui/DemoModeBanner";
 import {
-  LayoutDashboard, TrendingUp, Route, Radio, BarChart3,
+  TrendingUp, Route, Radio, BarChart3,
   Database, Shield, ArrowUpRight, ArrowDownRight, AlertTriangle, ExternalLink,
 } from "lucide-react";
 import { getCurrentStats, generateIndexValues, generateRouteAnalytics, generateAnomalies } from "@/lib/demo-data";
@@ -26,13 +25,31 @@ export default function DashboardPage() {
   return (
     <div>
       <DemoModeBanner />
-      <PageHeader
-        title="AeroCPI Dashboard"
-        description="Real-time overview of India's Airfare Price Index"
-        icon={LayoutDashboard}
-        badge="DEMO DATA"
-        badgeColor="bg-amber-100 text-amber-700"
-      />
+
+      {/* Editorial hero — National Airfare Overview */}
+      <section className="mb-8" aria-labelledby="hero-index-heading">
+        <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[color:var(--muted)] mb-3">
+          01 — National Airfare Overview
+        </p>
+        <div className="flex flex-wrap items-end gap-x-5 gap-y-2">
+          <h1
+            id="hero-index-heading"
+            className="text-5xl sm:text-6xl font-semibold text-[color:var(--foreground)] tracking-tight leading-none"
+          >
+            <span className="num">{stats.currentIndex}</span>
+          </h1>
+          <div className="pb-1.5">
+            <p className="text-base font-semibold text-emerald-600">
+              +{stats.monthlyChange}%{" "}
+              <span className="font-normal text-[color:var(--muted)]">vs previous month</span>
+            </p>
+            <p className="text-sm text-[color:var(--muted)] mt-0.5">
+              India Airfare Price Index — automated price intelligence across
+              representative Indian domestic routes.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Index & Key Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">

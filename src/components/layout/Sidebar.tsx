@@ -39,17 +39,51 @@ const navigation = [
   { name: "AI Setup Guide", href: "/admin/ai-setup", icon: Settings },
 ];
 
+// Brand mark: aircraft trajectory crossing an index line — minimal,
+// works at favicon size, no literal airplane illustration.
+export function BrandMark({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      className={className}
+    >
+      <path
+        d="M3 17.5 8.2 11l3.6 3.4L21 5.5"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="21" cy="5.5" r="2.1" fill="currentColor" />
+      <path
+        d="M8.2 11 6.4 6.2M11.8 14.4l4.9.9"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        opacity="0.55"
+      />
+    </svg>
+  );
+}
+
 export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:border-r border-[color:var(--border)] bg-[color:var(--surface)]/70 backdrop-blur-xl">
-      <Link href="/" className="flex items-center gap-2.5 px-6 py-5 border-b border-[color:var(--border)]">
+    <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:shrink-0 lg:my-4 lg:ml-4 rounded-2xl glass overflow-hidden">
+      <Link
+        href="/"
+        className="flex items-center gap-2.5 px-5 py-5 border-b border-[color:var(--border)]"
+      >
         <div className="w-9 h-9 bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--cyan)] rounded-xl flex items-center justify-center shadow-md shadow-blue-900/10">
-          <TrendingUp className="w-5 h-5 text-white" />
+          <BrandMark className="w-5 h-5 text-white" />
         </div>
         <div>
-          <span className="text-lg font-bold text-[color:var(--foreground)] tracking-tight">AeroCPI</span>
+          <span className="text-lg font-bold text-[color:var(--foreground)] tracking-tight">
+            AeroCPI
+          </span>
           <p className="text-[10px] text-[color:var(--muted)] uppercase tracking-widest font-medium">
             Airfare Intelligence
           </p>
@@ -58,21 +92,27 @@ export function Sidebar() {
 
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
         {navigation.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+          const isActive =
+            pathname === item.href || pathname.startsWith(item.href + "/");
           const isAI = item.href === "/assistant";
           return (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors",
+                "group flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200",
                 isActive
                   ? "bg-[color:var(--accent-soft)] text-[color:var(--accent-strong)] shadow-sm"
-                  : "text-[color:var(--muted)] hover:bg-white/70 hover:text-[color:var(--foreground)]",
+                  : "text-[color:var(--muted)] hover:bg-white/70 hover:text-[color:var(--foreground)] hover:translate-x-0.5",
                 isAI && !isActive && "text-[color:var(--cyan)]"
               )}
             >
-              <item.icon className={cn("w-[18px] h-[18px] flex-shrink-0", isActive && "text-[color:var(--accent)]")} />
+              <item.icon
+                className={cn(
+                  "w-[18px] h-[18px] flex-shrink-0 transition-transform duration-200 group-hover:scale-105",
+                  isActive && "text-[color:var(--accent)]"
+                )}
+              />
               {item.name}
               {isAI && !isActive && (
                 <span className="ml-auto pill bg-[color:var(--accent-soft)] text-[color:var(--accent)] !py-0.5 !px-2">

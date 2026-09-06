@@ -57,7 +57,8 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Warm neutral ambient gradient behind the whole app */
+/* Warm neutral ambient gradient behind the whole app —
+   soft lavender + peach glows layered over the ivory base */
 .aurora-warm {
   position: fixed;
   inset: 0;
@@ -66,7 +67,8 @@ body {
   background:
     radial-gradient(48rem 30rem at 8% -10%, rgba(30, 64, 175, 0.07), transparent 60%),
     radial-gradient(40rem 26rem at 95% 8%, rgba(8, 145, 178, 0.06), transparent 60%),
-    radial-gradient(50rem 34rem at 50% 115%, rgba(234, 88, 12, 0.05), transparent 60%),
+    radial-gradient(44rem 30rem at 88% 92%, rgba(167, 139, 250, 0.06), transparent 62%),
+    radial-gradient(40rem 28rem at 4% 88%, rgba(253, 186, 116, 0.07), transparent 60%),
     var(--background);
 }
 
@@ -123,9 +125,19 @@ body {
   box-shadow: 0 12px 40px rgba(31, 41, 55, 0.12);
 }
 
-/* ---------- Typography ---------- */
+/* ---------- Typography ----------
+   Editorial serif for headings (Fraunces), sans for body, and
+   tabular numerals for financial figures — see .num utility. */
 h1, h2, h3, h4 {
-  letter-spacing: -0.02em;
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  letter-spacing: -0.015em;
+}
+
+/* Financial-dashboard numerals: fixed-width digits so figures
+   align in tables, KPI cards and charts. */
+.num {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
 .text-gradient-accent {

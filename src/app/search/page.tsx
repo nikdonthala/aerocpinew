@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Search as SearchIcon, Plane, Clock, MapPin, ArrowRight, TrendingUp, TrendingDown, Minus, AlertTriangle } from "lucide-react";
 import { AIRPORTS, AIRLINES, generateFareObservations, getBookWaitSignal, getPriceHistory } from "@/lib/demo-data";
@@ -11,13 +12,33 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export default function SearchPage() {
-  const [origin, setOrigin] = useState("HYD");
-  const [destination, setDestination] = useState("DEL");
+function SearchPageInner() {
+  const searchParams = useSearchParams();
+
+  // Accept deep-links from the global search bar: /search?origin=DEL&destination=BOM
+  // or /search?q=DEL-BOM (two 3-letter codes). Lazily initialized — no effect needed.
+  const qOrigin = searchParams.get("origin");
+  const qDestination = searchParams.get("destination");
+  const q = searchParams.get("q");
+  const qCodes = q && !qOrigin ? q.toUpperCase().match(/\b[A-Z]{3}\b/g) : null;
+  const known = (code: string, fallback: string) =>
+    AIRPORTS.some((a) => a.iataCode === code) ? code : fallback;
+  const initOrigin = known(
+    (qOrigin ?? qCodes?.[0] ?? "HYD").toUpperCase(),
+    "HYD"
+  );
+  const initDestination = known(
+    (qDestination ?? qCodes?.[1] ?? "DEL").toUpperCase(),
+    "DEL"
+  );
+  const hasDeepLink = Boolean(qOrigin || (qCodes && qCodes.length >= 2));
+
+  const [origin, setOrigin] = useState(initOrigin);
+  const [destination, setDestination] = useState(initDestination);
   const [travelDate, setTravelDate] = useState("2026-09-30");
   const [airline, setAirline] = useState("");
   const [cabinClass, setCabinClass] = useState("Economy");
-  const [searched, setSearched] = useState(false);
+  const [searched, setSearched] = useState(hasDeepLink);
   const [observations] = useState(() => generateFareObservations());
 
   const handleSearch = () => {
@@ -279,5 +300,13 @@ export default function SearchPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={null}>
+      <SearchPageInner />
+    </Suspense>
   );
 }
