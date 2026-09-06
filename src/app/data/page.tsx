@@ -67,7 +67,7 @@ export default function DataPage() {
       />
 
       {/* Filters */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 mb-6">
+      <div className="card p-4 mb-6">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -76,26 +76,26 @@ export default function DataPage() {
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(0); }}
               placeholder="Search..."
-              className="w-full pl-9 pr-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full pl-9 pr-3 py-2 bg-gray-50  border border-[color:var(--border)]  rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
           <select value={routeFilter} onChange={(e) => { setRouteFilter(e.target.value); setPage(0); }}
-            className="px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            className="px-3 py-2 bg-gray-50  border border-[color:var(--border)]  rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
             <option value="">All Routes</option>
             {ROUTES.map(r => <option key={r.id} value={r.id}>{r.origin} → {r.destination}</option>)}
           </select>
           <select value={airlineFilter} onChange={(e) => { setAirlineFilter(e.target.value); setPage(0); }}
-            className="px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            className="px-3 py-2 bg-gray-50  border border-[color:var(--border)]  rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
             <option value="">All Airlines</option>
             {AIRLINES.map(a => <option key={a.code} value={a.code}>{a.name}</option>)}
           </select>
           <select value={sourceFilter} onChange={(e) => { setSourceFilter(e.target.value); setPage(0); }}
-            className="px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            className="px-3 py-2 bg-gray-50  border border-[color:var(--border)]  rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
             <option value="">All Sources</option>
             {DATA_SOURCES.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
           <select value={bwFilter} onChange={(e) => { setBwFilter(e.target.value); setPage(0); }}
-            className="px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            className="px-3 py-2 bg-gray-50  border border-[color:var(--border)]  rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
             <option value="">All Windows</option>
             {["T+1", "T+7", "T+15", "T+30", "T+45"].map(bw => <option key={bw} value={bw}>{bw}</option>)}
           </select>
@@ -107,11 +107,11 @@ export default function DataPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden mb-4">
+      <div className="card overflow-hidden mb-4">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+              <tr className="bg-gray-50  border-b border-[color:var(--border)] ">
                 <th className="text-left px-3 py-2.5 text-xs font-semibold text-gray-500 uppercase">Timestamp</th>
                 <th className="text-left px-3 py-2.5 text-xs font-semibold text-gray-500 uppercase">Source</th>
                 <th className="text-left px-3 py-2.5 text-xs font-semibold text-gray-500 uppercase">Airline</th>
@@ -126,17 +126,17 @@ export default function DataPage() {
             </thead>
             <tbody>
               {pageData.map((obs) => (
-                <tr key={obs.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                <tr key={obs.id} className="border-b border-gray-100  hover:bg-gray-50 /50">
                   <td className="px-3 py-2 text-xs text-gray-500 whitespace-nowrap">
                     {new Date(obs.timestamp).toLocaleString("en-IN", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
                   </td>
-                  <td className="px-3 py-2 text-xs text-gray-700 dark:text-gray-300">{obs.sourceName}</td>
-                  <td className="px-3 py-2 text-xs text-gray-700 dark:text-gray-300">{obs.airline}</td>
-                  <td className="px-3 py-2 text-xs font-medium text-gray-900 dark:text-white">{obs.flightNumber}</td>
-                  <td className="px-3 py-2 text-xs font-medium text-gray-900 dark:text-white">{obs.origin}–{obs.destination}</td>
+                  <td className="px-3 py-2 text-xs text-gray-700 ">{obs.sourceName}</td>
+                  <td className="px-3 py-2 text-xs text-gray-700 ">{obs.airline}</td>
+                  <td className="px-3 py-2 text-xs font-medium text-gray-900 ">{obs.flightNumber}</td>
+                  <td className="px-3 py-2 text-xs font-medium text-gray-900 ">{obs.origin}–{obs.destination}</td>
                   <td className="px-3 py-2 text-xs text-gray-500">{obs.departureDate}</td>
                   <td className="px-3 py-2 text-xs text-gray-500">{obs.bookingWindow}</td>
-                  <td className="px-3 py-2 text-xs font-semibold text-gray-900 dark:text-white text-right">
+                  <td className="px-3 py-2 text-xs font-semibold text-gray-900  text-right">
                     {formatCurrency(obs.totalFare)}
                   </td>
                   <td className="px-3 py-2 text-xs text-gray-500">{obs.cabinClass}</td>
@@ -155,14 +155,14 @@ export default function DataPage() {
           <button
             onClick={() => setPage(Math.max(0, page - 1))}
             disabled={page === 0}
-            className="px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1 rounded-lg bg-gray-100  hover:bg-gray-200  disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Previous
           </button>
           <button
             onClick={() => setPage(Math.min(totalPages - 1, page + 1))}
             disabled={page >= totalPages - 1}
-            className="px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1 rounded-lg bg-gray-100  hover:bg-gray-200  disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
           </button>

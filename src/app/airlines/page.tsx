@@ -3,6 +3,7 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Plane } from "lucide-react";
 import { generateAirlineAnalytics } from "@/lib/demo-data";
+import { chartTooltipContentStyle } from "@/lib/utils";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis,
@@ -34,7 +35,7 @@ export default function AirlinesPage() {
         {/* Airline Cards */}
         <div className="space-y-4">
           {airlines.map((airline) => (
-            <div key={airline.airlineCode} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+            <div key={airline.airlineCode} className="card p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <div
@@ -44,7 +45,7 @@ export default function AirlinesPage() {
                     {airline.airlineCode}
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{airline.airline}</h3>
+                    <h3 className="text-sm font-semibold text-gray-900 ">{airline.airline}</h3>
                     <p className="text-xs text-gray-400">{airline.routesMonitored} routes monitored</p>
                   </div>
                 </div>
@@ -55,15 +56,15 @@ export default function AirlinesPage() {
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <p className="text-xs text-gray-400">Avg Fare</p>
-                  <p className="text-sm font-bold text-gray-900 dark:text-white">₹{airline.avgFare.toLocaleString("en-IN")}</p>
+                  <p className="text-sm font-bold text-gray-900 ">₹{airline.avgFare.toLocaleString("en-IN")}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-400">Volatility</p>
-                  <p className="text-sm font-bold text-gray-900 dark:text-white">{airline.volatility}%</p>
+                  <p className="text-sm font-bold text-gray-900 ">{airline.volatility}%</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-400">Observations</p>
-                  <p className="text-sm font-bold text-gray-900 dark:text-white">{airline.observations.toLocaleString("en-IN")}</p>
+                  <p className="text-sm font-bold text-gray-900 ">{airline.observations.toLocaleString("en-IN")}</p>
                 </div>
               </div>
             </div>
@@ -72,8 +73,8 @@ export default function AirlinesPage() {
 
         {/* Charts */}
         <div className="space-y-6">
-          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Average Fare by Airline</h3>
+          <div className="card p-6">
+            <h3 className="text-lg font-semibold text-gray-900  mb-4">Average Fare by Airline</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={airlines}>
@@ -81,8 +82,8 @@ export default function AirlinesPage() {
                   <XAxis dataKey="airlineCode" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
                   <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${(v/1000).toFixed(0)}k`} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "#1F2937", border: "none", borderRadius: "8px", color: "#F9FAFB", fontSize: "12px" }}
-                    formatter={(value: any) => [`₹${Number(value).toLocaleString("en-IN")}`, "Avg Fare"]}
+                    contentStyle={chartTooltipContentStyle}
+                    formatter={(value: unknown) => [`₹${Number(value).toLocaleString("en-IN")}`, "Avg Fare"]}
                   />
                   <Bar dataKey="avgFare" radius={[4, 4, 0, 0]}>
                     {airlines.map((entry, index) => (
@@ -94,8 +95,8 @@ export default function AirlinesPage() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Airline Comparison</h3>
+          <div className="card p-6">
+            <h3 className="text-lg font-semibold text-gray-900  mb-4">Airline Comparison</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart data={radarData}>
@@ -105,7 +106,7 @@ export default function AirlinesPage() {
                   <Radar name="Avg Fare" dataKey="avgFare" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.2} />
                   <Radar name="Volatility" dataKey="volatility" stroke="#EF4444" fill="#EF4444" fillOpacity={0.2} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "#1F2937", border: "none", borderRadius: "8px", color: "#F9FAFB", fontSize: "12px" }}
+                    contentStyle={chartTooltipContentStyle}
                   />
                 </RadarChart>
               </ResponsiveContainer>
@@ -114,7 +115,7 @@ export default function AirlinesPage() {
         </div>
       </div>
 
-      <p className="text-xs text-gray-400 dark:text-gray-500 mt-4">
+      <p className="text-xs text-gray-400  mt-4">
         Note: These aggregate prototype statistics are not official airline statistics. Data shown is simulated for demonstration purposes.
       </p>
     </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Search as SearchIcon, Plane, Clock, MapPin, ArrowRight, TrendingUp, TrendingDown, Minus, AlertTriangle } from "lucide-react";
 import { AIRPORTS, AIRLINES, generateFareObservations, getBookWaitSignal, getPriceHistory } from "@/lib/demo-data";
+import { chartTooltipContentStyle } from "@/lib/utils";
 import { formatCurrency } from "@/lib/utils";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -89,14 +90,14 @@ export default function SearchPage() {
       />
 
       {/* Search Form */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 mb-8">
+      <div className="card p-6 mb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">From</label>
+            <label className="block text-xs font-semibold text-gray-500  mb-1.5">From</label>
             <select
               value={origin}
               onChange={(e) => setOrigin(e.target.value)}
-              className="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full px-3 py-2.5 bg-gray-50  border border-[color:var(--border)]  rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             >
               {AIRPORTS.map(a => (
                 <option key={a.iataCode} value={a.iataCode}>{a.city} ({a.iataCode})</option>
@@ -104,11 +105,11 @@ export default function SearchPage() {
             </select>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">To</label>
+            <label className="block text-xs font-semibold text-gray-500  mb-1.5">To</label>
             <select
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
-              className="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full px-3 py-2.5 bg-gray-50  border border-[color:var(--border)]  rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             >
               {AIRPORTS.filter(a => a.iataCode !== origin).map(a => (
                 <option key={a.iataCode} value={a.iataCode}>{a.city} ({a.iataCode})</option>
@@ -116,20 +117,20 @@ export default function SearchPage() {
             </select>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">Travel Date</label>
+            <label className="block text-xs font-semibold text-gray-500  mb-1.5">Travel Date</label>
             <input
               type="date"
               value={travelDate}
               onChange={(e) => setTravelDate(e.target.value)}
-              className="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full px-3 py-2.5 bg-gray-50  border border-[color:var(--border)]  rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">Airline (optional)</label>
+            <label className="block text-xs font-semibold text-gray-500  mb-1.5">Airline (optional)</label>
             <select
               value={airline}
               onChange={(e) => setAirline(e.target.value)}
-              className="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full px-3 py-2.5 bg-gray-50  border border-[color:var(--border)]  rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             >
               <option value="">All Airlines</option>
               {AIRLINES.map(a => (
@@ -153,21 +154,21 @@ export default function SearchPage() {
       {searched && (
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h3 className="text-lg font-semibold text-gray-900 ">
               {flights.length} flight{flights.length !== 1 ? "s" : ""} found — {origin} → {destination} — {formatDate(travelDate)}
             </h3>
           </div>
 
           {flights.length === 0 ? (
-            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-12 text-center">
-              <Plane className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-              <p className="text-gray-500 dark:text-gray-400">No flights found for this search.</p>
-              <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Try different dates or filters.</p>
+            <div className="card p-12 text-center">
+              <Plane className="w-12 h-12 text-gray-300  mx-auto mb-4" />
+              <p className="text-gray-500 ">No flights found for this search.</p>
+              <p className="text-sm text-gray-400  mt-1">Try different dates or filters.</p>
             </div>
           ) : (
             <div className="space-y-4">
               {flights.map((flight) => (
-                <div key={flight.canonicalFlightId + flight.departureTime} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+                <div key={flight.canonicalFlightId + flight.departureTime} className="card overflow-hidden">
                   {/* Flight Card */}
                   <div className="p-5">
                     <div className="flex flex-col lg:flex-row lg:items-center gap-4">
@@ -181,22 +182,22 @@ export default function SearchPage() {
                             {flight.airlineCode}
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-gray-900 dark:text-white">{flight.airline}</p>
+                            <p className="text-sm font-semibold text-gray-900 ">{flight.airline}</p>
                             <p className="text-xs text-gray-400">Flight {flight.flightNumber}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-4 mt-3">
                           <div className="text-center">
-                            <p className="text-lg font-bold text-gray-900 dark:text-white">{flight.departureTime}</p>
+                            <p className="text-lg font-bold text-gray-900 ">{flight.departureTime}</p>
                             <p className="text-xs text-gray-400">{flight.origin}</p>
                           </div>
                           <div className="flex-1 flex items-center gap-2">
-                            <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600" />
+                            <div className="flex-1 h-px bg-gray-300 " />
                             <Plane className="w-4 h-4 text-gray-400" />
-                            <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600" />
+                            <div className="flex-1 h-px bg-gray-300 " />
                           </div>
                           <div className="text-center">
-                            <p className="text-lg font-bold text-gray-900 dark:text-white">{flight.arrivalTime}</p>
+                            <p className="text-lg font-bold text-gray-900 ">{flight.arrivalTime}</p>
                             <p className="text-xs text-gray-400">{flight.destination}</p>
                           </div>
                         </div>
@@ -211,7 +212,7 @@ export default function SearchPage() {
 
                       {/* Price */}
                       <div className="text-right lg:min-w-[160px]">
-                        <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                        <p className="text-2xl font-bold text-gray-900 ">
                           {formatCurrency(flight.avgFare)}
                         </p>
                         <p className="text-xs text-gray-400">avg across {flight.sourceCount} sources</p>
@@ -220,10 +221,10 @@ export default function SearchPage() {
                       {/* Signal */}
                       <div className={`px-3 py-2 rounded-lg border text-sm font-semibold ${
                         flight.signal.signal === "BOOK NOW"
-                          ? "bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800"
+                          ? "bg-green-50 text-green-700 border-green-200   "
                           : flight.signal.signal === "WAIT"
-                          ? "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950 dark:text-yellow-300 dark:border-yellow-800"
-                          : "bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700"
+                          ? "bg-yellow-50 text-yellow-700 border-yellow-200   "
+                          : "bg-gray-50 text-gray-700 border-[color:var(--border)]   "
                       }`}>
                         {flight.signal.signal === "BOOK NOW" ? "🟢" : flight.signal.signal === "WAIT" ? "🟡" : "⚪"} {flight.signal.signal}
                       </div>
@@ -231,25 +232,25 @@ export default function SearchPage() {
                   </div>
 
                   {/* Source Comparison */}
-                  <div className="border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 p-4">
+                  <div className="border-t border-gray-100  bg-gray-50 /50 p-4">
                     <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Source Comparison</p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                       {flight.sources.sort((a, b) => a.fare - b.fare).map((src, i) => (
-                        <div key={i} className="bg-white dark:bg-gray-900 rounded-lg p-2.5 border border-gray-100 dark:border-gray-700">
+                        <div key={i} className="bg-white  rounded-lg p-2.5 border border-gray-100 ">
                           <p className="text-xs text-gray-500">{src.name}</p>
-                          <p className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(src.fare)}</p>
+                          <p className="text-sm font-bold text-gray-900 ">{formatCurrency(src.fare)}</p>
                         </div>
                       ))}
                     </div>
                   </div>
 
                   {/* Expanded Info */}
-                  <div className="border-t border-gray-100 dark:border-gray-800 p-4">
+                  <div className="border-t border-gray-100  p-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {/* Signal Reason */}
                       <div>
                         <p className="text-xs font-semibold text-gray-500 uppercase mb-1">Recommendation Reason</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">{flight.signal.reason}</p>
+                        <p className="text-sm text-gray-600 ">{flight.signal.reason}</p>
                       </div>
 
                       {/* Price History Chart */}
@@ -261,8 +262,8 @@ export default function SearchPage() {
                               <XAxis dataKey="date" tick={{ fontSize: 9 }} tickLine={false} axisLine={false} />
                               <YAxis tick={{ fontSize: 9 }} tickLine={false} axisLine={false} hide />
                               <Tooltip
-                                contentStyle={{ backgroundColor: "#1F2937", border: "none", borderRadius: "8px", color: "#F9FAFB", fontSize: "11px" }}
-                                formatter={(value: any) => [`₹${Number(value).toLocaleString("en-IN")}`, "Avg"]}
+                                contentStyle={chartTooltipContentStyle}
+                                formatter={(value: unknown) => [`₹${Number(value).toLocaleString("en-IN")}`, "Avg"]}
                               />
                               <Line type="monotone" dataKey="avgFare" stroke="#3B82F6" strokeWidth={2} dot={{ r: 3 }} />
                             </LineChart>

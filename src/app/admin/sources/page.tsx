@@ -20,11 +20,11 @@ export default function SourcesPage() {
         </button>
       </div>
 
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+      <div className="card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+              <tr className="bg-gray-50  border-b border-[color:var(--border)] ">
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Source</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Type</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Status</th>
@@ -36,17 +36,17 @@ export default function SourcesPage() {
             </thead>
             <tbody>
               {DATA_SOURCES.map((src) => (
-                <tr key={src.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                <tr key={src.id} className="border-b border-gray-100  hover:bg-gray-50 /50">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className={`w-2.5 h-2.5 rounded-full ${
                         src.status === "Active" ? "bg-green-500" :
                         src.status === "Delayed" ? "bg-yellow-500" : "bg-red-500"
                       }`} />
-                      <span className="text-sm font-medium text-gray-900 dark:text-white">{src.name}</span>
+                      <span className="text-sm font-medium text-gray-900 ">{src.name}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{src.type}</td>
+                  <td className="px-4 py-3 text-sm text-gray-500 ">{src.type}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                       src.status === "Active" ? "bg-green-100 text-green-700" :
@@ -56,8 +56,8 @@ export default function SourcesPage() {
                       {src.status === "Active" ? "🟢" : src.status === "Delayed" ? "🟡" : "🔴"} {src.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{src.lastUpdate}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300 text-right">{src.records.toLocaleString("en-IN")}</td>
+                  <td className="px-4 py-3 text-sm text-gray-500 ">{src.lastUpdate}</td>
+                  <td className="px-4 py-3 text-sm text-gray-700  text-right">{src.records.toLocaleString("en-IN")}</td>
                   <td className="px-4 py-3 text-sm text-right">
                     <span className={src.errorCount > 50 ? "text-red-600 font-semibold" : src.errorCount > 10 ? "text-yellow-600" : "text-gray-500"}>
                       {src.errorCount}
@@ -65,7 +65,7 @@ export default function SourcesPage() {
                   </td>
                   <td className="px-4 py-3 text-sm text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <div className="w-16 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div className="w-16 h-1.5 bg-gray-200  rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full ${
                             src.quality >= 98 ? "bg-green-500" :
@@ -90,16 +90,16 @@ export default function SourcesPage() {
       </div>
 
       {/* Freshness Chart */}
-      <div className="mt-8 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Source Freshness</h3>
+      <div className="mt-8 card p-6">
+        <h3 className="text-lg font-semibold text-gray-900  mb-4">Source Freshness</h3>
         <div className="space-y-3">
           {DATA_SOURCES.sort((a, b) => {
             const freshness: Record<string, number> = { "Active": 0, "Delayed": 1, "Failed": 2 };
             return freshness[a.status] - freshness[b.status];
           }).map((src) => (
             <div key={src.id} className="flex items-center gap-4">
-              <span className="text-sm text-gray-700 dark:text-gray-300 w-36 truncate">{src.name}</span>
-              <div className="flex-1 h-4 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+              <span className="text-sm text-gray-700  w-36 truncate">{src.name}</span>
+              <div className="flex-1 h-4 bg-gray-100  rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all ${
                     src.status === "Active" ? "bg-green-400" :

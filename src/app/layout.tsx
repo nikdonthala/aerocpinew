@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "AeroCPI — Real-Time Indian Airfare Price Index",
-  description: "An automated airfare intelligence platform that collects, standardizes and analyzes flight-price observations to generate a real-time Airfare Price Index for India.",
+  description:
+    "An automated airfare intelligence platform that collects, standardizes and analyzes flight-price observations to generate a real-time Airfare Price Index for India.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -23,7 +24,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-gray-50 dark:bg-gray-950">{children}</body>
+      <body className="min-h-full flex flex-col text-[color:var(--foreground)]">
+        <div className="aurora-warm" aria-hidden="true" />
+        {children}
+      </body>
     </html>
   );
 }

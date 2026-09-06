@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Bell, TrendingUp, Monitor, X } from "lucide-react";
+import { Menu, Bell, TrendingUp, Monitor, X, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useDemoMode } from "@/components/DemoModeProvider";
@@ -12,6 +12,8 @@ const mobileNav = [
   { name: "Index", href: "/index-page" },
   { name: "Routes", href: "/routes" },
   { name: "Search", href: "/search" },
+  { name: "AI Assistant", href: "/assistant" },
+  { name: "AI Setup", href: "/admin/ai-setup" },
   { name: "Admin", href: "/admin" },
 ];
 
@@ -21,53 +23,64 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 flex items-center gap-4 px-4 sm:px-6 py-3 bg-white/80 dark:bg-gray-950/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800">
+    <header className="glass sticky top-0 z-40 flex items-center gap-4 px-4 sm:px-6 py-3 border-x-0 border-t-0 rounded-none">
       <button
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+        aria-label="Toggle navigation menu"
+        className="lg:hidden p-2 rounded-lg hover:bg-white/60"
       >
         {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
 
-      <div className="flex items-center gap-2 lg:hidden">
-        <div className="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center">
+      <Link href="/" className="flex items-center gap-2 lg:hidden">
+        <div className="w-7 h-7 bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--cyan)] rounded-lg flex items-center justify-center">
           <TrendingUp className="w-4 h-4 text-white" />
         </div>
-        <span className="font-bold text-gray-900 dark:text-white">AeroCPI</span>
-      </div>
+        <span className="font-bold text-[color:var(--foreground)]">AeroCPI</span>
+      </Link>
 
       <div className="flex-1" />
 
       {isDemoMode && (
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-full">
-          <Monitor className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-          <span className="text-xs font-semibold text-amber-700 dark:text-amber-300 uppercase tracking-wide">
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-amber-50/80 border border-amber-200 rounded-full">
+          <Monitor className="w-3.5 h-3.5 text-amber-600" />
+          <span className="text-xs font-semibold text-amber-700 uppercase tracking-wide">
             Demo Data
           </span>
         </div>
       )}
 
       <Link
-        href="/dashboard"
-        className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+        href="/assistant"
+        aria-label="Open AI Assistant"
+        className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full pill bg-[color:var(--accent-soft)] text-[color:var(--accent)] hover:bg-blue-100 transition-colors"
       >
-        <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+        <Sparkles className="w-3.5 h-3.5" />
+        Ask AI
+      </Link>
+
+      <Link
+        href="/dashboard"
+        aria-label="View notifications"
+        className="relative p-2 rounded-lg hover:bg-white/60"
+      >
+        <Bell className="w-5 h-5 text-[color:var(--muted)]" />
         <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
       </Link>
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="fixed inset-0 bg-black/50" onClick={() => setMobileMenuOpen(false)} />
-          <div className="fixed inset-y-0 left-0 w-72 bg-white dark:bg-gray-950 shadow-xl">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+          <div className="fixed inset-0 bg-[color:var(--ink-navy)]/50" onClick={() => setMobileMenuOpen(false)} />
+          <div className="fixed inset-y-0 left-0 w-72 bg-[color:var(--surface)] shadow-xl">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[color:var(--border)]">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--cyan)] rounded-lg flex items-center justify-center">
                   <TrendingUp className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-lg font-bold text-gray-900 dark:text-white">AeroCPI</span>
+                <span className="text-lg font-bold text-[color:var(--foreground)]">AeroCPI</span>
               </div>
-              <button onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-lg hover:bg-gray-100">
+              <button onClick={() => setMobileMenuOpen(false)} aria-label="Close menu" className="p-2 rounded-lg hover:bg-white/60">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -78,10 +91,10 @@ export function Header() {
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={cn(
-                    "block px-3 py-2.5 rounded-lg text-sm font-medium",
+                    "block px-3 py-2.5 rounded-xl text-sm font-medium",
                     pathname === item.href
-                      ? "bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300"
-                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900"
+                      ? "bg-[color:var(--accent-soft)] text-[color:var(--accent-strong)]"
+                      : "text-[color:var(--muted)] hover:bg-white/70"
                   )}
                 >
                   {item.name}

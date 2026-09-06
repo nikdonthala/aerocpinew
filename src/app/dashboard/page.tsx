@@ -8,6 +8,7 @@ import {
   Database, Shield, ArrowUpRight, ArrowDownRight, AlertTriangle, ExternalLink,
 } from "lucide-react";
 import { getCurrentStats, generateIndexValues, generateRouteAnalytics, generateAnomalies } from "@/lib/demo-data";
+import { chartTooltipContentStyle, chartTooltipLabelStyle } from "@/lib/utils";
 import Link from "next/link";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -77,11 +78,11 @@ export default function DashboardPage() {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Main Index Chart */}
-        <div className="lg:col-span-2 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+        <div className="lg:col-span-2 card p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Airfare Price Index</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Last 30 days</p>
+              <h3 className="text-lg font-semibold text-gray-900 ">Airfare Price Index</h3>
+              <p className="text-sm text-gray-500 ">Last 30 days</p>
             </div>
             <div className="flex gap-2">
               {["7D", "30D", "90D", "1Y"].map((period) => (
@@ -89,8 +90,8 @@ export default function DashboardPage() {
                   key={period}
                   className={`px-3 py-1 text-xs font-medium rounded-lg ${
                     period === "30D"
-                      ? "bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300"
-                      : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                      ? "bg-blue-100  text-blue-700 "
+                      : "text-gray-500 hover:bg-gray-100 "
                   }`}
                 >
                   {period}
@@ -111,8 +112,8 @@ export default function DashboardPage() {
                 <XAxis dataKey="date" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} tickFormatter={(v) => v.length > 7 ? v.slice(5) : v} />
                 <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} domain={["auto", "auto"]} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: "#1F2937", border: "none", borderRadius: "8px", color: "#F9FAFB", fontSize: "12px" }}
-                  labelStyle={{ color: "#9CA3AF" }}
+                  contentStyle={chartTooltipContentStyle}
+                  labelStyle={chartTooltipLabelStyle}
                 />
                 <Area type="monotone" dataKey="indexValue" stroke="#3B82F6" strokeWidth={2} fill="url(#indexGrad)" />
               </AreaChart>
@@ -123,23 +124,23 @@ export default function DashboardPage() {
         {/* Right Column */}
         <div className="space-y-6">
           {/* Top Routes */}
-          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top Routes</h3>
+          <div className="card p-6">
+            <h3 className="text-lg font-semibold text-gray-900  mb-4">Top Routes</h3>
             <div className="space-y-3">
               {routeAnalytics.slice(0, 5).map((route) => (
                 <Link
                   key={route.routeId}
                   href={`/routes?route=${route.routeId}`}
-                  className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50  transition-colors"
                 >
                   <div>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">
+                    <span className="text-sm font-medium text-gray-900 ">
                       {route.originCode} → {route.destCode}
                     </span>
                     <p className="text-xs text-gray-400">₹{route.avgFare.toLocaleString("en-IN")} avg</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-sm font-semibold text-gray-900 dark:text-white">{route.index}</span>
+                    <span className="text-sm font-semibold text-gray-900 ">{route.index}</span>
                     <p className={`text-xs font-medium ${route.mom >= 0 ? "text-red-500" : "text-green-500"}`}>
                       {route.mom >= 0 ? "+" : ""}{route.mom}%
                     </p>
@@ -150,24 +151,24 @@ export default function DashboardPage() {
           </div>
 
           {/* Recent Anomalies */}
-          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+          <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Anomalies</h3>
-              <Link href="/anomalies" className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+              <h3 className="text-lg font-semibold text-gray-900 ">Recent Anomalies</h3>
+              <Link href="/anomalies" className="text-xs text-blue-600  hover:underline flex items-center gap-1">
                 View all <ExternalLink className="w-3 h-3" />
               </Link>
             </div>
             <div className="space-y-3">
               {anomalies.slice(0, 3).map((anomaly) => (
-                <div key={anomaly.id} className="flex items-start gap-3 p-2 rounded-lg bg-gray-50 dark:bg-gray-800">
+                <div key={anomaly.id} className="flex items-start gap-3 p-2 rounded-lg bg-gray-50 ">
                   <AlertTriangle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${
                     anomaly.severity === "CRITICAL" ? "text-red-500" :
                     anomaly.severity === "HIGH" ? "text-orange-500" :
                     anomaly.severity === "MEDIUM" ? "text-yellow-500" : "text-blue-500"
                   }`} />
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{anomaly.routeName}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-sm font-medium text-gray-900 ">{anomaly.routeName}</p>
+                    <p className="text-xs text-gray-500 ">
                       ₹{anomaly.observedValue.toLocaleString("en-IN")} vs ₹{anomaly.referenceValue.toLocaleString("en-IN")} ({anomaly.deviation > 0 ? "+" : ""}{anomaly.deviation}%)
                     </p>
                     <span className={`inline-block mt-1 px-2 py-0.5 text-[10px] font-semibold rounded-full ${
@@ -188,8 +189,8 @@ export default function DashboardPage() {
       {/* Bottom Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Route Comparison */}
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Route Index Comparison</h3>
+        <div className="card p-6">
+          <h3 className="text-lg font-semibold text-gray-900  mb-4">Route Index Comparison</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={routeAnalytics.slice(0, 7)} layout="vertical">
@@ -197,7 +198,7 @@ export default function DashboardPage() {
                 <XAxis type="number" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
                 <YAxis type="category" dataKey="routeId" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} width={80} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: "#1F2937", border: "none", borderRadius: "8px", color: "#F9FAFB", fontSize: "12px" }}
+                  contentStyle={chartTooltipContentStyle}
                 />
                 <Bar dataKey="index" fill="#3B82F6" radius={[0, 4, 4, 0]} />
               </BarChart>
@@ -206,8 +207,8 @@ export default function DashboardPage() {
         </div>
 
         {/* Source Status */}
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Data Source Health</h3>
+        <div className="card p-6">
+          <h3 className="text-lg font-semibold text-gray-900  mb-4">Data Source Health</h3>
           <div className="space-y-3">
             {[
               { name: "IndiGo Direct", status: "Active", records: "12,450", quality: 99.8 },
@@ -217,14 +218,14 @@ export default function DashboardPage() {
               { name: "Cleartrip", status: "Delayed", records: "9,840", quality: 95.1 },
               { name: "Yatra", status: "Failed", records: "5,430", quality: 72.3 },
             ].map((src) => (
-              <div key={src.name} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+              <div key={src.name} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 ">
                 <div className="flex items-center gap-3">
                   <div className={`w-2.5 h-2.5 rounded-full ${
                     src.status === "Active" ? "bg-green-500" :
                     src.status === "Delayed" ? "bg-yellow-500" : "bg-red-500"
                   }`} />
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{src.name}</p>
+                    <p className="text-sm font-medium text-gray-900 ">{src.name}</p>
                     <p className="text-xs text-gray-400">{src.records} records</p>
                   </div>
                 </div>

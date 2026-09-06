@@ -54,6 +54,21 @@ export function getStatusColor(status: string): string {
   }
 }
 
+// ============================================================
+// Recharts tooltip theme — warm ivory, consistent with globals.css.
+// Dark panels would clash with the light theme; keep one shared style.
+// ============================================================
+export const chartTooltipContentStyle = {
+  backgroundColor: "rgba(255, 253, 249, 0.95)",
+  border: "1px solid var(--border)",
+  borderRadius: "0.75rem",
+  color: "#1f2937",
+  fontSize: "12px",
+  boxShadow: "0 8px 32px rgba(31, 41, 55, 0.10)",
+} as const;
+
+export const chartTooltipLabelStyle = { color: "#6b7280", fontWeight: 600 } as const;
+
 export function getStatusDot(status: string): string {
   switch (status) {
     case "Active": return "bg-green-500";

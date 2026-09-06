@@ -36,7 +36,7 @@ export default function MapPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Map */}
-        <div className="lg:col-span-2 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+        <div className="lg:col-span-2 card p-6">
           <div className="relative">
             <svg viewBox="100 50 400 420" className="w-full h-auto">
               {/* Simplified India outline */}
@@ -78,7 +78,7 @@ export default function MapPage() {
                 return (
                   <g key={airport.iataCode}>
                     <circle cx={pos.x} cy={pos.y} r={6} fill="#1E40AF" stroke="white" strokeWidth={2} />
-                    <text x={pos.x} y={pos.y - 12} textAnchor="middle" className="text-[10px] font-bold fill-gray-700 dark:fill-gray-300">
+                    <text x={pos.x} y={pos.y - 12} textAnchor="middle" className="text-[10px] font-bold fill-gray-700 ">
                       {airport.iataCode}
                     </text>
                   </g>
@@ -104,14 +104,14 @@ export default function MapPage() {
         {/* Route Details */}
         <div className="space-y-4">
           {selected ? (
-            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="card p-6">
+              <h3 className="text-lg font-semibold text-gray-900  mb-4">
                 {selected.originCode} → {selected.destCode}
               </h3>
               <div className="space-y-3">
                 <div>
                   <p className="text-xs text-gray-400">Current Index</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{selected.index}</p>
+                  <p className="text-2xl font-bold text-gray-900 ">{selected.index}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-400">MoM Change</p>
@@ -121,13 +121,13 @@ export default function MapPage() {
                 </div>
                 <div>
                   <p className="text-xs text-gray-400">Average Fare</p>
-                  <p className="text-lg font-bold text-gray-900 dark:text-white">
+                  <p className="text-lg font-bold text-gray-900 ">
                     {formatCurrency(selected.avgFare)}
                   </p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-400">Observations</p>
-                  <p className="text-lg font-bold text-gray-900 dark:text-white">
+                  <p className="text-lg font-bold text-gray-900 ">
                     {selected.observations.toLocaleString("en-IN")}
                   </p>
                 </div>
@@ -143,15 +143,15 @@ export default function MapPage() {
               </div>
             </div>
           ) : (
-            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 text-center">
-              <MapIcon className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-              <p className="text-sm text-gray-500 dark:text-gray-400">Click a route on the map to view details</p>
+            <div className="card p-6 text-center">
+              <MapIcon className="w-10 h-10 text-gray-300  mx-auto mb-3" />
+              <p className="text-sm text-gray-500 ">Click a route on the map to view details</p>
             </div>
           )}
 
           {/* Route List */}
-          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">All Routes</h3>
+          <div className="card p-6">
+            <h3 className="text-lg font-semibold text-gray-900  mb-4">All Routes</h3>
             <div className="space-y-2">
               {routes.sort((a, b) => b.observations - a.observations).map((route) => (
                 <button
@@ -159,12 +159,12 @@ export default function MapPage() {
                   onClick={() => setSelectedRoute(route.routeId)}
                   className={`w-full flex items-center justify-between p-2.5 rounded-lg text-left transition-colors ${
                     selectedRoute === route.routeId
-                      ? "bg-blue-50 dark:bg-blue-950"
-                      : "hover:bg-gray-50 dark:hover:bg-gray-800"
+                      ? "bg-blue-50 "
+                      : "hover:bg-gray-50 "
                   }`}
                 >
                   <div>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">{route.routeId}</span>
+                    <span className="text-sm font-medium text-gray-900 ">{route.routeId}</span>
                     <p className="text-xs text-gray-400">{route.observations.toLocaleString("en-IN")} obs</p>
                   </div>
                   <div className="text-right">

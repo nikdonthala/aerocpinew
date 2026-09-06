@@ -108,22 +108,22 @@ export default function MethodologyPage() {
 
       {/* Pipeline */}
       <div className="mb-12">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Processing Pipeline</h2>
+        <h2 className="text-xl font-bold text-gray-900  mb-6">Processing Pipeline</h2>
         <div className="space-y-4">
           {pipelineSteps.map((step, i) => (
             <div key={step.step}>
-              <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+              <div className="card p-5">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-blue-100  flex items-center justify-center flex-shrink-0">
                     <span className="text-lg">{step.icon}</span>
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">STEP {step.step}</span>
-                      <h3 className="text-base font-semibold text-gray-900 dark:text-white">{step.title}</h3>
+                      <span className="text-xs font-semibold text-blue-600 ">STEP {step.step}</span>
+                      <h3 className="text-base font-semibold text-gray-900 ">{step.title}</h3>
                     </div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{step.description}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                    <p className="text-sm text-gray-500  mb-2">{step.description}</p>
+                    <p className="text-sm text-gray-600  bg-gray-50  rounded-lg p-3">
                       {step.detail}
                     </p>
                   </div>
@@ -131,7 +131,7 @@ export default function MethodologyPage() {
               </div>
               {i < pipelineSteps.length - 1 && (
                 <div className="flex justify-center py-1">
-                  <ArrowDown className="w-5 h-5 text-gray-300 dark:text-gray-600" />
+                  <ArrowDown className="w-5 h-5 text-gray-300 " />
                 </div>
               )}
             </div>
@@ -140,28 +140,28 @@ export default function MethodologyPage() {
       </div>
 
       {/* Base Period */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 mb-8">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Base Period</h2>
-        <div className="bg-blue-50 dark:bg-blue-950 rounded-lg p-4 inline-flex items-center gap-3">
-          <span className="text-3xl font-bold text-blue-600 dark:text-blue-400">100.0</span>
+      <div className="card p-6 mb-8">
+        <h2 className="text-xl font-bold text-gray-900  mb-4">Base Period</h2>
+        <div className="bg-blue-50  rounded-lg p-4 inline-flex items-center gap-3">
+          <span className="text-3xl font-bold text-blue-600 ">100.0</span>
           <div>
-            <p className="text-sm font-semibold text-gray-900 dark:text-white">January 2026 = 100</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">All index values are relative to this base period</p>
+            <p className="text-sm font-semibold text-gray-900 ">January 2026 = 100</p>
+            <p className="text-xs text-gray-500 ">All index values are relative to this base period</p>
           </div>
         </div>
       </div>
 
       {/* Route Basket */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 mb-8">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Representative Route Basket</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+      <div className="card p-6 mb-8">
+        <h2 className="text-xl font-bold text-gray-900  mb-2">Representative Route Basket</h2>
+        <p className="text-sm text-gray-500  mb-4">
           Routes are selected based on traffic importance and representative geographic coverage.
           The administrator can modify this basket.
         </p>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-200 dark:border-gray-700">
+              <tr className="border-b border-[color:var(--border)] ">
                 <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 uppercase">Route</th>
                 <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 uppercase">Weight</th>
                 <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 uppercase">Importance</th>
@@ -169,10 +169,10 @@ export default function MethodologyPage() {
             </thead>
             <tbody>
               {routeBasket.map((r) => (
-                <tr key={r.route} className="border-b border-gray-100 dark:border-gray-800">
-                  <td className="px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white">{r.route}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">{r.weight}</td>
-                  <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{r.importance}</td>
+                <tr key={r.route} className="border-b border-gray-100 ">
+                  <td className="px-4 py-3 text-sm font-semibold text-gray-900 ">{r.route}</td>
+                  <td className="px-4 py-3 text-sm text-gray-700 ">{r.weight}</td>
+                  <td className="px-4 py-3 text-sm text-gray-500 ">{r.importance}</td>
                 </tr>
               ))}
             </tbody>
@@ -181,17 +181,17 @@ export default function MethodologyPage() {
       </div>
 
       {/* Booking Windows */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 mb-8">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Booking Windows</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+      <div className="card p-6 mb-8">
+        <h2 className="text-xl font-bold text-gray-900  mb-2">Booking Windows</h2>
+        <p className="text-sm text-gray-500  mb-4">
           Mandatory observation windows represent how many days before departure the fare is observed.
         </p>
         <div className="space-y-3">
           {bookingWindows.map((bw) => (
-            <div key={bw.window} className="flex items-center gap-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-              <span className="text-lg font-bold text-blue-600 dark:text-blue-400 w-12">{bw.window}</span>
+            <div key={bw.window} className="flex items-center gap-4 p-3 bg-gray-50  rounded-lg">
+              <span className="text-lg font-bold text-blue-600  w-12">{bw.window}</span>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900 dark:text-white">{bw.description}</p>
+                <p className="text-sm font-medium text-gray-900 ">{bw.description}</p>
                 <p className="text-xs text-gray-400">{bw.typical}</p>
               </div>
             </div>
@@ -200,22 +200,22 @@ export default function MethodologyPage() {
       </div>
 
       {/* Index Formula */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 mb-8">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Index Formula</h2>
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+      <div className="card p-6 mb-8">
+        <h2 className="text-xl font-bold text-gray-900  mb-4">Index Formula</h2>
+        <div className="bg-gray-50  rounded-lg p-6">
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <p className="text-sm font-semibold text-gray-500 uppercase mb-3">Price Relative</p>
               <div className="text-center">
-                <p className="font-mono text-gray-900 dark:text-white">Current standardized price</p>
+                <p className="font-mono text-gray-900 ">Current standardized price</p>
                 <div className="w-full h-px bg-gray-400 my-2" />
-                <p className="font-mono text-gray-900 dark:text-white">Base-period standardized price</p>
+                <p className="font-mono text-gray-900 ">Base-period standardized price</p>
               </div>
             </div>
             <div>
               <p className="text-sm font-semibold text-gray-500 uppercase mb-3">National Airfare Index</p>
               <div className="text-center">
-                <p className="font-mono text-gray-900 dark:text-white">
+                <p className="font-mono text-gray-900 ">
                   Σ (Route Weight × Route Price Relative)
                 </p>
               </div>
@@ -227,53 +227,53 @@ export default function MethodologyPage() {
                 ].map((item) => (
                   <div key={item} className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-green-500" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">{item}</span>
+                    <span className="text-sm text-gray-700 ">{item}</span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
         </div>
-        <p className="mt-4 text-xs text-gray-400 dark:text-gray-500">
+        <p className="mt-4 text-xs text-gray-400 ">
           Note: This is a prototype methodology — configurable and subject to validation.
           Not claiming to reproduce the official CPI methodology.
         </p>
       </div>
 
       {/* Standardized Observation */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Standardized Fare Observation</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+      <div className="card p-6">
+        <h2 className="text-xl font-bold text-gray-900  mb-4">Standardized Fare Observation</h2>
+        <p className="text-sm text-gray-500  mb-4">
           Each observation is standardized into a common structure for comparability across sources.
         </p>
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 font-mono text-sm space-y-1">
+        <div className="bg-gray-50  rounded-lg p-4 font-mono text-sm space-y-1">
           <div className="grid grid-cols-2 gap-x-6 gap-y-1">
             <span className="text-gray-500">airline:</span>
-            <span className="text-gray-900 dark:text-white">IndiGo</span>
+            <span className="text-gray-900 ">IndiGo</span>
             <span className="text-gray-500">flight_number:</span>
-            <span className="text-gray-900 dark:text-white">6E2045</span>
+            <span className="text-gray-900 ">6E2045</span>
             <span className="text-gray-500">origin:</span>
-            <span className="text-gray-900 dark:text-white">HYD</span>
+            <span className="text-gray-900 ">HYD</span>
             <span className="text-gray-500">destination:</span>
-            <span className="text-gray-900 dark:text-white">DEL</span>
+            <span className="text-gray-900 ">DEL</span>
             <span className="text-gray-500">departure_date:</span>
-            <span className="text-gray-900 dark:text-white">2026-09-30</span>
+            <span className="text-gray-900 ">2026-09-30</span>
             <span className="text-gray-500">departure_time:</span>
-            <span className="text-gray-900 dark:text-white">08:30</span>
+            <span className="text-gray-900 ">08:30</span>
             <span className="text-gray-500">arrival_time:</span>
-            <span className="text-gray-900 dark:text-white">10:45</span>
+            <span className="text-gray-900 ">10:45</span>
             <span className="text-gray-500">booking_window:</span>
-            <span className="text-gray-900 dark:text-white">T+30</span>
+            <span className="text-gray-900 ">T+30</span>
             <span className="text-gray-500">cabin_class:</span>
-            <span className="text-gray-900 dark:text-white">Economy</span>
+            <span className="text-gray-900 ">Economy</span>
             <span className="text-gray-500">stops:</span>
-            <span className="text-gray-900 dark:text-white">Non-stop</span>
+            <span className="text-gray-900 ">Non-stop</span>
             <span className="text-gray-500">total_fare:</span>
-            <span className="text-gray-900 dark:text-white">₹5,421</span>
+            <span className="text-gray-900 ">₹5,421</span>
             <span className="text-gray-500">source:</span>
-            <span className="text-gray-900 dark:text-white">MakeMyTrip</span>
+            <span className="text-gray-900 ">MakeMyTrip</span>
             <span className="text-gray-500">collected:</span>
-            <span className="text-gray-900 dark:text-white">2026-09-01 10:00:00</span>
+            <span className="text-gray-900 ">2026-09-01 10:00:00</span>
           </div>
         </div>
       </div>

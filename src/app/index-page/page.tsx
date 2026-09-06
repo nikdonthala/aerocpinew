@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { MetricCard } from "@/components/ui/MetricCard";
 import { TrendingUp, Info } from "lucide-react";
 import { generateIndexValues } from "@/lib/demo-data";
+import { chartTooltipContentStyle, chartTooltipLabelStyle } from "@/lib/utils";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, AreaChart, Area,
@@ -37,11 +38,11 @@ export default function IndexPage() {
       />
 
       {/* Methodology Note */}
-      <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-8 flex items-start gap-3">
-        <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+      <div className="bg-blue-50  border border-blue-200  rounded-xl p-4 mb-8 flex items-start gap-3">
+        <Info className="w-5 h-5 text-blue-600  flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-sm font-medium text-blue-800 dark:text-blue-200">AeroCPI Prototype Index — Demonstration Data</p>
-          <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+          <p className="text-sm font-medium text-blue-800 ">AeroCPI Prototype Index — Demonstration Data</p>
+          <p className="text-sm text-blue-700  mt-1">
             The Airfare Price Index measures the relative change in standardized airfare prices over time
             using a defined basket of representative domestic city-pairs and consistent observation rules.
             This is a prototype index using simulated data.
@@ -60,21 +61,21 @@ export default function IndexPage() {
       </div>
 
       {/* Period Selector */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+      <div className="card p-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Index Trend</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">AeroCPI Prototype Index value over time</p>
+            <h3 className="text-lg font-semibold text-gray-900 ">Index Trend</h3>
+            <p className="text-sm text-gray-500 ">AeroCPI Prototype Index value over time</p>
           </div>
-          <div className="flex gap-1 mt-3 sm:mt-0 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+          <div className="flex gap-1 mt-3 sm:mt-0 bg-gray-100  rounded-lg p-1">
             {periods.map((p) => (
               <button
                 key={p.value}
                 onClick={() => setSelectedPeriod(p.value)}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
                   selectedPeriod === p.value
-                    ? "bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm"
-                    : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                    ? "bg-white  text-blue-600  shadow-sm"
+                    : "text-gray-500 hover:text-gray-700 "
                 }`}
               >
                 {p.label}
@@ -102,9 +103,9 @@ export default function IndexPage() {
               />
               <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} domain={["auto", "auto"]} />
               <Tooltip
-                contentStyle={{ backgroundColor: "#1F2937", border: "none", borderRadius: "8px", color: "#F9FAFB", fontSize: "12px" }}
-                labelStyle={{ color: "#9CA3AF" }}
-                formatter={(value: any) => [`Index: ${value}`, "Value"]}
+                contentStyle={chartTooltipContentStyle}
+                labelStyle={chartTooltipLabelStyle}
+                formatter={(value: unknown) => [`Index: ${value}`, "Value"]}
               />
               <Area type="monotone" dataKey="indexValue" stroke="#3B82F6" strokeWidth={2.5} fill="url(#idxGrad)" dot={false} />
             </AreaChart>
@@ -113,23 +114,23 @@ export default function IndexPage() {
       </div>
 
       {/* Index Formula */}
-      <div className="mt-8 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Index Formula</h3>
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 text-center">
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">Price Relative</p>
+      <div className="mt-8 card p-6">
+        <h3 className="text-lg font-semibold text-gray-900  mb-4">Index Formula</h3>
+        <div className="bg-gray-50  rounded-lg p-6 text-center">
+          <p className="text-sm text-gray-500  mb-3">Price Relative</p>
           <div className="flex flex-col items-center gap-2">
-            <p className="text-lg font-mono text-gray-900 dark:text-white">Current standardized price</p>
+            <p className="text-lg font-mono text-gray-900 ">Current standardized price</p>
             <div className="w-48 h-px bg-gray-400" />
-            <p className="text-lg font-mono text-gray-900 dark:text-white">Base-period standardized price</p>
+            <p className="text-lg font-mono text-gray-900 ">Base-period standardized price</p>
           </div>
-          <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">National Airfare Index</p>
-            <p className="text-lg font-mono text-gray-900 dark:text-white">
+          <div className="mt-6 pt-4 border-t border-[color:var(--border)] ">
+            <p className="text-sm text-gray-500  mb-2">National Airfare Index</p>
+            <p className="text-lg font-mono text-gray-900 ">
               = Σ (Route Weight × Route Price Relative)
             </p>
           </div>
         </div>
-        <p className="mt-4 text-xs text-gray-400 dark:text-gray-500">
+        <p className="mt-4 text-xs text-gray-400 ">
           Note: This is a prototype methodology — configurable and subject to validation.
           This is not claiming to reproduce the official CPI methodology.
         </p>
