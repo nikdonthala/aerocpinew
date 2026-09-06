@@ -1,10 +1,36 @@
 "use client";
 
+"use client";
+
+import { useState } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Monitor, RefreshCw } from "lucide-react";
 import { DATA_SOURCES } from "@/lib/demo-data";
 
 export default function SourcesPage() {
+  // Demo refresh: simulates a new collection cycle for all connectors.
+  const [sources, setSources] = useState(DATA_SOURCES);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastRefresh, setLastRefresh] = useState<string | null>(null);
+
+  const refreshAll = () => {
+    if (refreshing) return;
+    setRefreshing(true);
+    // Simulate collection latency, then bump records and refresh timestamps.
+    setTimeout(() => {
+      const now = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+      setSources((prev) =>
+        prev.map((src) => ({
+          ...src,
+          lastUpdate: now,
+          records: src.records + Math.floor(Math.random() * 120) + 20,
+        }))
+      );
+      setLastRefresh(now);
+      setRefreshing(false);
+    }, 900);
+  };
+
   return (
     <div>
       <PageHeader
@@ -13,10 +39,20 @@ export default function SourcesPage() {
         icon={Monitor}
       />
 
-      <div className="flex justify-end mb-6">
-        <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors">
-          <RefreshCw className="w-4 h-4" />
-          Refresh All
+      <div className="flex items-center justify-end gap-3 mb-6">
+        {lastRefresh && (
+          <span className="text-xs text-[color:var(--muted)]">
+            Last refresh: {lastRefresh} IST
+          </span>
+        )}
+        <button
+          onClick={refreshAll}
+          disabled={refreshing}
+          aria-busy={refreshing}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors"
+        >
+          <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
+          {refreshing ? "Refreshing…" : "Refresh All"}
         </button>
       </div>
 
@@ -35,7 +71,7 @@ export default function SourcesPage() {
               </tr>
             </thead>
             <tbody>
-              {DATA_SOURCES.map((src) => (
+              {sources.map((src) => (
                 <tr key={src.id} className="border-b border-gray-100  hover:bg-gray-50 /50">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">

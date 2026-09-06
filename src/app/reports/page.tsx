@@ -9,6 +9,54 @@ export default function ReportsPage() {
   const routes = generateRouteAnalytics();
   const anomalies = generateAnomalies();
 
+  const downloadFile = (content: string, mime: string, filename: string) => {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleExport = (label: string) => {
+    const date = new Date().toISOString().split("T")[0];
+    const base = `aerocpi-report-${date}`;
+    const summary = {
+      report: "Daily Airfare Intelligence Report (demo data)",
+      generatedAt: new Date().toISOString(),
+      index: {
+        current: stats.currentIndex,
+        dailyChange: stats.dailyChange,
+        weeklyChange: stats.weeklyChange,
+        monthlyChange: stats.monthlyChange,
+      },
+      topRisingRoutes: topRising,
+      topFallingRoutes: topFalling,
+      dataSources: DATA_SOURCES.map(({ id, name, type, status, quality }) => ({ id, name, type, status, quality })),
+      anomalyCount: anomalies.length,
+    };
+    if (label === "Export CSV") {
+      const rows = routes.map((r) => [r.routeId, r.avgFare, r.mom, r.observations]);
+      const csv =
+        ["Route,Avg Fare,Monthly Change %,Observations", ...rows.map((r) => r.join(","))].join("\n");
+      downloadFile(csv, "text/csv", `${base}.csv`);
+    } else if (label === "Export Excel") {
+      // Excel-compatible: same CSV served with a spreadsheet MIME type.
+      const rows = routes.map((r) => [r.routeId, r.avgFare, r.mom, r.observations]);
+      const csv =
+        ["Route,Avg Fare,Monthly Change %,Observations", ...rows.map((r) => r.join(","))].join("\n");
+      downloadFile(csv, "application/vnd.ms-excel", `${base}.xls`);
+    } else if (label === "Export PDF") {
+      // Print dialog → "Save as PDF" gives a real PDF without extra dependencies.
+      window.print();
+    } else {
+      downloadFile(JSON.stringify(summary, null, 2), "application/json", `${base}.json`);
+    }
+  };
+
   const topRising = routes.filter(r => r.mom > 0).sort((a, b) => b.mom - a.mom).slice(0, 5);
   const topFalling = routes.filter(r => r.mom < 0).sort((a, b) => a.mom - b.mom).slice(0, 5);
 
@@ -33,6 +81,11 @@ export default function ReportsPage() {
         ].map((btn) => (
           <button
             key={btn.label}
+            onClick={() =>
+              btn.label === "Export PDF" || btn.label === "Print Report"
+                ? window.print()
+                : handleExport(btn.label)
+            }
             className={`flex items-center gap-2 px-4 py-2.5 text-white text-sm font-semibold rounded-lg transition-colors ${btn.color}`}
           >
             <btn.icon className="w-4 h-4" />

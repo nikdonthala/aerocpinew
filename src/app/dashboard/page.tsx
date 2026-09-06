@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { MetricCard } from "@/components/ui/MetricCard";
 import { DemoModeBanner } from "@/components/ui/DemoModeBanner";
 import {
@@ -14,13 +15,29 @@ import {
   ResponsiveContainer, AreaChart, Area, BarChart, Bar,
 } from "recharts";
 
+// How many trailing data points each chart period tab shows.
+const PERIOD_POINTS: Record<string, number> = { "7D": 7, "30D": 31, "90D": 40, "1Y": 999 };
+const PERIOD_LABELS: Record<string, string> = {
+  "7D": "last 7 days",
+  "30D": "last 30 days",
+  "90D": "last 90 days",
+  "1Y": "last 12 months",
+};
+
 export default function DashboardPage() {
   const stats = getCurrentStats();
   const indexValues = generateIndexValues();
   const routeAnalytics = generateRouteAnalytics();
   const anomalies = generateAnomalies();
+  const [period, setPeriod] = useState("30D");
 
-  const recentIndex = indexValues.slice(-30);
+  const recentIndex = indexValues.slice(
+    -Math.min(PERIOD_POINTS[period] ?? 31, indexValues.length)
+  );
+  const periodStart = recentIndex[0]?.indexValue ?? stats.currentIndex;
+  const periodChange = periodStart
+    ? ((stats.currentIndex - periodStart) / periodStart) * 100
+    : 0;
 
   return (
     <div>
@@ -99,19 +116,26 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-lg font-semibold text-gray-900 ">Airfare Price Index</h3>
-              <p className="text-sm text-gray-500 ">Last 30 days</p>
+              <p className="text-sm text-gray-500 ">
+                {PERIOD_LABELS[period] ?? "last 30 days"} ·{" "}
+                <span className={periodChange >= 0 ? "text-green-600 font-medium" : "text-red-500 font-medium"}>
+                  {periodChange >= 0 ? "+" : ""}{periodChange.toFixed(1)}%
+                </span>
+              </p>
             </div>
             <div className="flex gap-2">
-              {["7D", "30D", "90D", "1Y"].map((period) => (
+              {["7D", "30D", "90D", "1Y"].map((p) => (
                 <button
-                  key={period}
-                  className={`px-3 py-1 text-xs font-medium rounded-lg ${
-                    period === "30D"
+                  key={p}
+                  onClick={() => setPeriod(p)}
+                  aria-pressed={period === p}
+                  className={`px-3 py-1 text-xs font-medium rounded-lg transition-colors ${
+                    p === period
                       ? "bg-blue-100  text-blue-700 "
                       : "text-gray-500 hover:bg-gray-100 "
                   }`}
                 >
-                  {period}
+                  {p}
                 </button>
               ))}
             </div>
