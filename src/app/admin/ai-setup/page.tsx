@@ -132,7 +132,10 @@ export default function AiSetupPage() {
           providers (e.g. Groq, OpenRouter, or a self-hosted vLLM endpoint). Create an account
           with your chosen provider and generate an API key from their dashboard.
         </p>
-        <p>Choose a provider whose catalogue includes <code>gpt-oss-120b</code>.</p>
+        <p>
+          On Groq the exact model id is <code>openai/gpt-oss-120b</code> — the app defaults to
+          it, so no extra configuration is needed.
+        </p>
       </Section>
 
       <Section icon={Terminal} title="2 · Configure environment variables">
@@ -140,12 +143,12 @@ export default function AiSetupPage() {
           Add the following to <code>.env.local</code> (local development) or your hosting
           provider&apos;s server-side environment settings (production):
         </p>
-        <CodeBlock>{`AI_API_KEY=your-secret-key-here
-AI_MODEL=gpt-oss-120b
+        <CodeBlock>{`GROQ_API_KEY=your_groq_api_key_here
+AI_MODEL=openai/gpt-oss-120b
 AI_BASE_URL=https://api.groq.com/openai/v1
 AI_PROVIDER=groq`}</CodeBlock>
         <p>
-          Variable meanings: <code>AI_API_KEY</code> (secret), <code>AI_MODEL</code> (model id),
+          Variable meanings: <code>GROQ_API_KEY</code> (secret; <code>AI_API_KEY</code> also accepted), <code>AI_MODEL</code> (model id),
           <code> AI_BASE_URL</code> (OpenAI-compatible endpoint), <code>AI_PROVIDER</code>{" "}
           (display label). If your provider requires different variable names, set them in the
           provider abstraction at <code>src/lib/ai/provider.ts</code>.
@@ -181,7 +184,7 @@ curl -s -X POST http://localhost:3000/api/ai \\
       <Section icon={Wrench} title="5 · Troubleshooting">
         <ul className="list-disc pl-5 space-y-1.5">
           <li>
-            <strong>&ldquo;AI service is not configured&rdquo;</strong> — <code>AI_API_KEY</code> is
+            <strong>&ldquo;AI service is not configured&rdquo;</strong> — <code>GROQ_API_KEY</code> is
             missing from the server environment. Add it and restart.
           </li>
           <li>
@@ -205,8 +208,7 @@ curl -s -X POST http://localhost:3000/api/ai \\
 
       <Section icon={RefreshCw} title="6 · Rotate or revoke the key">
         <ul className="list-disc pl-5 space-y-1.5">
-          <li>Revoke the old key in the provider dashboard (immediate).</li>
-          <li>Generate a new key and update <code>AI_API_KEY</code> in the server environment.</li>
+          <li>Revoke the old key in the provider dashboard (immediate).</li>            <li>Generate a new key and update <code>GROQ_API_KEY</code> in the server environment.</li>
           <li>Redeploy/restart so the new value is picked up.</li>
           <li>
             If a key ever leaks: revoke it <strong>immediately</strong>, rotate, and audit usage in

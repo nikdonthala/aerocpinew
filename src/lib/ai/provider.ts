@@ -6,8 +6,9 @@
 // vLLM/ollama endpoints, etc.). This abstraction lets the provider be
 // selected purely through environment variables — no code changes needed:
 //
-//   AI_API_KEY      – secret key for the provider (server-side only!)
-//   AI_MODEL        – defaults to "gpt-oss-120b"
+//   GROQ_API_KEY    – secret key for the provider (server-side only!)
+//                     AI_API_KEY is accepted as a legacy alias
+//   AI_MODEL        – defaults to "openai/gpt-oss-120b" (Groq's model id)
 //   AI_BASE_URL     – OpenAI-compatible base URL, e.g. https://api.groq.com/openai/v1
 //   AI_PROVIDER     – optional label used in health checks
 //
@@ -27,8 +28,10 @@ export interface ChatCompletionResult {
 }
 
 export function getAiConfig() {
-  const apiKey = process.env.AI_API_KEY || "";
-  const model = process.env.AI_MODEL || "gpt-oss-120b";
+  // GROQ_API_KEY is the canonical name; AI_API_KEY kept as a legacy alias so
+  // either environment variable activates the assistant.
+  const apiKey = process.env.GROQ_API_KEY || process.env.AI_API_KEY || "";
+  const model = process.env.AI_MODEL || "openai/gpt-oss-120b";
   const baseUrl = process.env.AI_BASE_URL || "https://api.groq.com/openai/v1";
   const provider = process.env.AI_PROVIDER || "openai-compatible";
   return { apiKey, model, baseUrl, provider };
@@ -53,7 +56,7 @@ export async function chatCompletion(
     return {
       ok: false,
       error:
-        "The AI service is not configured. An administrator must set AI_API_KEY in the server environment. See the AI Setup Guide.",
+        "The AI service is not configured. An administrator must set GROQ_API_KEY (or AI_API_KEY) in the server environment. See the AI Setup Guide.",
       status: 503,
     };
   }
@@ -89,7 +92,7 @@ export async function chatCompletion(
         ok: false,
         error:
           res.status === 401 || res.status === 403
-            ? "The AI service rejected the configured credentials. An administrator must verify AI_API_KEY."
+            ? "The AI service rejected the configured credentials. An administrator must verify GROQ_API_KEY."
             : res.status === 429
             ? "The AI service is rate-limited right now. Please try again in a moment."
             : "The AI service is temporarily unavailable. Please try again later.",

@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
       model, // model name is not a secret
       message: configured
         ? "AI assistant is configured and ready."
-        : "AI_API_KEY is not set. See the AI Setup Guide for configuration steps.",
+        : "GROQ_API_KEY (or AI_API_KEY) is not set. See the AI Setup Guide for configuration steps.",
     },
     { headers: { "Cache-Control": "no-store" } }
   );

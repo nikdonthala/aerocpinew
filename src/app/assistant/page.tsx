@@ -205,7 +205,7 @@ export default function AssistantPage() {
             <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
               {error}
-              {(error.includes("not configured") || error.includes("AI_API_KEY")) && (
+              {(error.includes("not configured") || error.includes("GROQ_API_KEY")) && (
                 <a href="/admin/ai-setup" className="ml-1 underline font-medium">
                   Open the AI Setup Guide →
                 </a>

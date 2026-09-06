@@ -50,8 +50,8 @@ Copy `.env.example` to `.env.local` and fill in real values:
 
 | Variable        | Required | Purpose                                          |
 | --------------- | -------- | ------------------------------------------------ |
-| `AI_API_KEY`    | for AI   | Secret key for the AI provider (server-side only) |
-| `AI_MODEL`      | no       | Defaults to `gpt-oss-120b`                        |
+| `GROQ_API_KEY` | for AI   | Secret Groq API key (server-side only; `AI_API_KEY` also accepted) |
+| `AI_MODEL`      | no       | Defaults to `openai/gpt-oss-120b`                 |
 | `AI_BASE_URL`   | no       | OpenAI-compatible endpoint                        |
 | `AI_PROVIDER`   | no       | Display label for the admin console               |
 | `AI_TIMEOUT_MS` | no       | Provider timeout, default 30000                   |
@@ -64,8 +64,8 @@ client code. See the in-app **AI Setup Guide** (`/admin/ai-setup`).
 The assistant targets `gpt-oss-120b` through any OpenAI-compatible provider. The provider is
 selected entirely via environment variables — no code changes:
 
-1. Obtain a key from a provider serving `gpt-oss-120b`
-2. Set `AI_API_KEY`, `AI_MODEL=gpt-oss-120b`, `AI_BASE_URL`
+1. Obtain a key from [console.groq.com](https://console.groq.com) (or any provider serving the model)
+2. Set `GROQ_API_KEY`, `AI_MODEL=openai/gpt-oss-120b`, `AI_BASE_URL`
 3. Restart and verify at `/admin/ai-setup` (status panel calls `/api/ai/health`)
 
 The AI is **grounded**: a server-built data snapshot is injected as the system prompt, and the
