@@ -55,19 +55,34 @@ export function getStatusColor(status: string): string {
 }
 
 // ============================================================
-// Recharts tooltip theme — warm ivory, consistent with globals.css.
-// Dark panels would clash with the light theme; keep one shared style.
+// Recharts theme — warm ivory, consistent with globals.css.
+// One shared palette: clay for primary series, lavender/rose for
+// secondary, muted sage for "falling" semantics.
 // ============================================================
-export const chartTooltipContentStyle = {
-  backgroundColor: "rgba(255, 253, 249, 0.95)",
-  border: "1px solid var(--border)",
-  borderRadius: "0.75rem",
-  color: "#1f2937",
-  fontSize: "12px",
-  boxShadow: "0 8px 32px rgba(31, 41, 55, 0.10)",
+export const CHART = {
+  accent: "#b0532c",
+  accentStrong: "#8f431f",
+  lavender: "#7e6ba8",
+  rose: "#c98a94",
+  up: "#b9605b",
+  down: "#5f7f5c",
+  grid: "rgba(174, 152, 122, 0.22)",
+  axisTick: "#8a8378",
 } as const;
 
-export const chartTooltipLabelStyle = { color: "#6b7280", fontWeight: 600 } as const;
+export const chartTooltipContentStyle = {
+  backgroundColor: "rgba(255, 253, 249, 0.96)",
+  border: "1px solid rgba(219, 205, 182, 0.8)",
+  borderRadius: "0.85rem",
+  color: "#292524",
+  fontSize: "12px",
+  boxShadow: "0 12px 32px -12px rgba(90, 62, 40, 0.22)",
+  padding: "8px 12px",
+} as const;
+
+export const chartTooltipLabelStyle = { color: "#8a8378", fontWeight: 600 } as const;
+
+export const chartAxisTick = { fontSize: 11, fill: CHART.axisTick } as const;
 
 export function getStatusDot(status: string): string {
   switch (status) {

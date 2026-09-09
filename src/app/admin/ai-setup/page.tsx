@@ -84,7 +84,7 @@ export default function AiSetupPage() {
         description="Configure the gpt-oss-120b assistant — keys stay server-side, always"
         icon={KeyRound}
         badge="ADMIN"
-        badgeColor="bg-cyan-100 text-cyan-800"
+        badgeColor="bg-[color:var(--lavender-soft)] text-[color:var(--cyan)]"
       />
 
       {/* Live status */}
@@ -94,9 +94,9 @@ export default function AiSetupPage() {
             {checking ? (
               <Loader2 className="w-5 h-5 animate-spin text-[color:var(--accent)]" />
             ) : health?.status === "ONLINE" ? (
-              <CheckCircle2 className="w-5 h-5 text-green-600" />
+              <CheckCircle2 className="w-5 h-5 text-[color:var(--down)]" />
             ) : (
-              <XCircle className="w-5 h-5 text-amber-600" />
+              <XCircle className="w-5 h-5 text-[#c07a3d]" />
             )}
             <div>
               <p className="font-semibold text-[color:var(--foreground)] text-sm">
@@ -115,9 +115,9 @@ export default function AiSetupPage() {
       </div>
 
       {/* Security warning */}
-      <div className="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-50/80 border border-red-200">
-        <ShieldAlert className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-        <div className="text-sm text-red-800">
+      <div className="mb-6 flex items-start gap-3 p-4 rounded-xl bg-[#f7e7e2]/70 border border-[#e8c8c0]">
+        <ShieldAlert className="w-5 h-5 text-[color:var(--up)] flex-shrink-0 mt-0.5" />
+        <div className="text-sm text-[color:var(--up)]">
           <p className="font-semibold mb-0.5">Never commit API keys to GitHub or expose them in frontend code.</p>
           <p>
             Keys must exist only in server-side environment variables. Anyone with the key can
@@ -217,7 +217,7 @@ curl -s -X POST http://localhost:3000/api/ai \\
         </ul>
       </Section>
 
-      <div className="mt-8 mb-12 p-4 rounded-xl bg-[color:var(--accent-soft)] border border-blue-200/60 text-sm text-[color:var(--accent-strong)]">
+      <div className="mt-8 mb-12 p-4 rounded-xl bg-[color:var(--accent-soft)] border border-[#ecd9c4] text-sm text-[color:var(--accent-strong)]">
         <strong>Deployment note:</strong> On Vercel, set these variables under Project → Settings →
         Environment Variables (server-side). Never prefix them with <code>NEXT_PUBLIC_</code> —
         that would expose them in the browser bundle.

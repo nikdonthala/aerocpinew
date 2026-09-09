@@ -3,12 +3,12 @@
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { Search as SearchIcon, Plane, Clock, MapPin, ArrowRight, TrendingUp, TrendingDown, Minus, AlertTriangle } from "lucide-react";
+import { Search as SearchIcon, Plane, ArrowRight, Minus, AlertTriangle } from "lucide-react";
 import { AIRPORTS, AIRLINES, generateFareObservations, getBookWaitSignal, getPriceHistory } from "@/lib/demo-data";
-import { chartTooltipContentStyle } from "@/lib/utils";
+import { chartTooltipContentStyle, chartAxisTick, CHART } from "@/lib/utils";
 import { formatCurrency } from "@/lib/utils";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  LineChart, Line, XAxis, YAxis, Tooltip,
   ResponsiveContainer,
 } from "recharts";
 
@@ -103,7 +103,7 @@ function SearchPageInner() {
   };
 
   return (
-    <div>
+    <div className="animate-rise">
       <PageHeader
         title="Search Flights"
         description="Search and compare fares across multiple sources"
@@ -111,14 +111,15 @@ function SearchPageInner() {
       />
 
       {/* Search Form */}
-      <div className="card p-6 mb-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="card-glass p-6 mb-9">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
           <div>
-            <label className="block text-xs font-semibold text-gray-500  mb-1.5">From</label>
+            <label className="kicker block mb-1.5">From</label>
             <select
               value={origin}
               onChange={(e) => setOrigin(e.target.value)}
-              className="w-full px-3 py-2.5 bg-gray-50  border border-[color:var(--border)]  rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="input"
+              aria-label="Origin airport"
             >
               {AIRPORTS.map(a => (
                 <option key={a.iataCode} value={a.iataCode}>{a.city} ({a.iataCode})</option>
@@ -126,11 +127,12 @@ function SearchPageInner() {
             </select>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-500  mb-1.5">To</label>
+            <label className="kicker block mb-1.5">To</label>
             <select
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
-              className="w-full px-3 py-2.5 bg-gray-50  border border-[color:var(--border)]  rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="input"
+              aria-label="Destination airport"
             >
               {AIRPORTS.filter(a => a.iataCode !== origin).map(a => (
                 <option key={a.iataCode} value={a.iataCode}>{a.city} ({a.iataCode})</option>
@@ -138,20 +140,22 @@ function SearchPageInner() {
             </select>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-500  mb-1.5">Travel Date</label>
+            <label className="kicker block mb-1.5">Travel Date</label>
             <input
               type="date"
               value={travelDate}
               onChange={(e) => setTravelDate(e.target.value)}
-              className="w-full px-3 py-2.5 bg-gray-50  border border-[color:var(--border)]  rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="input"
+              aria-label="Travel date"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-500  mb-1.5">Airline (optional)</label>
+            <label className="kicker block mb-1.5">Airline</label>
             <select
               value={airline}
               onChange={(e) => setAirline(e.target.value)}
-              className="w-full px-3 py-2.5 bg-gray-50  border border-[color:var(--border)]  rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="input"
+              aria-label="Airline filter"
             >
               <option value="">All Airlines</option>
               {AIRLINES.map(a => (
@@ -159,134 +163,147 @@ function SearchPageInner() {
               ))}
             </select>
           </div>
-          <div className="flex items-end">
-            <button
-              onClick={handleSearch}
-              className="w-full px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
-            >
-              <SearchIcon className="w-4 h-4" />
-              Search
-            </button>
-          </div>
+          <button
+            onClick={handleSearch}
+            className="btn-primary px-6 py-2.5 text-sm flex items-center justify-center gap-2 h-[42px]"
+          >
+            <SearchIcon className="w-4 h-4" />
+            Search
+          </button>
         </div>
       </div>
 
       {/* Results */}
       {searched && (
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 ">
-              {flights.length} flight{flights.length !== 1 ? "s" : ""} found — {origin} → {destination} — {formatDate(travelDate)}
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="text-xl text-[color:var(--foreground)]">
+              {flights.length} flight{flights.length !== 1 ? "s" : ""} found ·{" "}
+              <span className="text-[color:var(--muted)]">{origin} → {destination} · {formatDate(travelDate)}</span>
             </h3>
           </div>
 
           {flights.length === 0 ? (
-            <div className="card p-12 text-center">
-              <Plane className="w-12 h-12 text-gray-300  mx-auto mb-4" />
-              <p className="text-gray-500 ">No flights found for this search.</p>
-              <p className="text-sm text-gray-400  mt-1">Try different dates or filters.</p>
+            <div className="card p-14 text-center">
+              <Plane className="w-10 h-10 text-[color:var(--border)] mx-auto mb-4" />
+              <p className="text-[color:var(--muted)]">No flights found for this search.</p>
+              <p className="text-sm text-[color:var(--muted)]/80 mt-1">Try different dates or filters.</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-5">
               {flights.map((flight) => (
                 <div key={flight.canonicalFlightId + flight.departureTime} className="card overflow-hidden">
                   {/* Flight Card */}
-                  <div className="p-5">
-                    <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+                  <div className="p-6">
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-5">
                       {/* Flight Info */}
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-3 mb-3">
                           <div
-                            className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold"
-                            style={{ backgroundColor: AIRLINES.find(a => a.code === flight.airlineCode)?.color || "#666" }}
+                            className="w-9 h-9 rounded-[0.7rem] flex items-center justify-center text-white text-xs font-bold tracking-wide"
+                            style={{ backgroundColor: AIRLINES.find(a => a.code === flight.airlineCode)?.color || "#8a8378" }}
                           >
                             {flight.airlineCode}
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-gray-900 ">{flight.airline}</p>
-                            <p className="text-xs text-gray-400">Flight {flight.flightNumber}</p>
+                            <p className="text-sm font-semibold text-[color:var(--foreground)]">{flight.airline}</p>
+                            <p className="text-xs text-[color:var(--muted)]">Flight {flight.flightNumber}</p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-4 mt-3">
-                          <div className="text-center">
-                            <p className="text-lg font-bold text-gray-900 ">{flight.departureTime}</p>
-                            <p className="text-xs text-gray-400">{flight.origin}</p>
+                        <div className="flex items-center gap-4 mt-4 max-w-xs">
+                          <div>
+                            <p className="num text-lg text-[color:var(--foreground)]">{flight.departureTime}</p>
+                            <p className="text-xs text-[color:var(--muted)] mt-0.5">{flight.origin}</p>
                           </div>
-                          <div className="flex-1 flex items-center gap-2">
-                            <div className="flex-1 h-px bg-gray-300 " />
-                            <Plane className="w-4 h-4 text-gray-400" />
-                            <div className="flex-1 h-px bg-gray-300 " />
+                          <div className="flex-1 flex items-center gap-2 px-1">
+                            <div className="flex-1 h-px bg-[color:var(--border)]" />
+                            <Plane className="w-3.5 h-3.5 text-[color:var(--muted)] rotate-90" />
+                            <div className="flex-1 h-px bg-[color:var(--border)]" />
                           </div>
-                          <div className="text-center">
-                            <p className="text-lg font-bold text-gray-900 ">{flight.arrivalTime}</p>
-                            <p className="text-xs text-gray-400">{flight.destination}</p>
+                          <div>
+                            <p className="num text-lg text-[color:var(--foreground)]">{flight.arrivalTime}</p>
+                            <p className="text-xs text-[color:var(--muted)] mt-0.5">{flight.destination}</p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+                        <div className="flex items-center flex-wrap gap-x-3 gap-y-1 mt-3 text-xs text-[color:var(--muted)]">
                           <span>{flight.stops === 0 ? "Non-stop" : `${flight.stops} stop`}</span>
-                          <span>•</span>
+                          <Minus className="w-2.5 h-2.5 text-[color:var(--border)]" />
                           <span>{flight.cabinClass}</span>
-                          <span>•</span>
+                          <Minus className="w-2.5 h-2.5 text-[color:var(--border)]" />
                           <span>Matched across {flight.sourceCount} source{flight.sourceCount > 1 ? "s" : ""}</span>
                         </div>
                       </div>
 
                       {/* Price */}
-                      <div className="text-right lg:min-w-[160px]">
-                        <p className="text-2xl font-bold text-gray-900 ">
+                      <div className="lg:text-right lg:min-w-[150px]">
+                        <p className="num text-3xl text-[color:var(--foreground)]">
                           {formatCurrency(flight.avgFare)}
                         </p>
-                        <p className="text-xs text-gray-400">avg across {flight.sourceCount} sources</p>
+                        <p className="text-xs text-[color:var(--muted)] mt-0.5">avg across {flight.sourceCount} sources</p>
                       </div>
 
                       {/* Signal */}
-                      <div className={`px-3 py-2 rounded-lg border text-sm font-semibold ${
+                      <div className={`inline-flex self-start lg:self-center px-3.5 py-2 rounded-full border text-xs font-semibold tracking-wide ${
                         flight.signal.signal === "BOOK NOW"
-                          ? "bg-green-50 text-green-700 border-green-200   "
+                          ? "bg-[#e9efe6] text-[color:var(--down)] border-[#cddcc7]"
                           : flight.signal.signal === "WAIT"
-                          ? "bg-yellow-50 text-yellow-700 border-yellow-200   "
-                          : "bg-gray-50 text-gray-700 border-[color:var(--border)]   "
+                          ? "bg-[#f3ecda] text-[#8a6f2c] border-[#e2d7ba]"
+                          : "bg-white/70 text-[color:var(--muted)] border-[color:var(--border)]"
                       }`}>
-                        {flight.signal.signal === "BOOK NOW" ? "🟢" : flight.signal.signal === "WAIT" ? "🟡" : "⚪"} {flight.signal.signal}
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full mr-2 ${
+                            flight.signal.signal === "BOOK NOW"
+                              ? "bg-[color:var(--down)]"
+                              : flight.signal.signal === "WAIT"
+                              ? "bg-[#c9a23f]"
+                              : "bg-[color:var(--muted)]"
+                          }`}
+                        />
+                        {flight.signal.signal}
                       </div>
                     </div>
                   </div>
 
                   {/* Source Comparison */}
-                  <div className="border-t border-gray-100  bg-gray-50 /50 p-4">
-                    <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Source Comparison</p>
+                  <div className="border-t border-[color:var(--border)]/60 bg-[color:var(--well)]/50 px-6 py-4">
+                    <p className="kicker mb-2.5">Source Comparison</p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                       {flight.sources.sort((a, b) => a.fare - b.fare).map((src, i) => (
-                        <div key={i} className="bg-white  rounded-lg p-2.5 border border-gray-100 ">
-                          <p className="text-xs text-gray-500">{src.name}</p>
-                          <p className="text-sm font-bold text-gray-900 ">{formatCurrency(src.fare)}</p>
+                        <div key={i} className="bg-[color:var(--surface)] rounded-xl p-3 border border-[color:var(--border)]/60">
+                          <p className="text-xs text-[color:var(--muted)]">{src.name}</p>
+                          <p className="num text-sm font-semibold text-[color:var(--foreground)] mt-0.5">{formatCurrency(src.fare)}</p>
                         </div>
                       ))}
                     </div>
                   </div>
 
                   {/* Expanded Info */}
-                  <div className="border-t border-gray-100  p-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="border-t border-[color:var(--border)]/60 p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
                       {/* Signal Reason */}
                       <div>
-                        <p className="text-xs font-semibold text-gray-500 uppercase mb-1">Recommendation Reason</p>
-                        <p className="text-sm text-gray-600 ">{flight.signal.reason}</p>
+                        <p className="kicker mb-2">Recommendation</p>
+                        <p className="text-sm text-[color:var(--foreground)]/85 leading-relaxed">{flight.signal.reason}</p>
+                        <p className="text-xs text-[color:var(--muted)] mt-2">
+                          Historical average on this route:{" "}
+                          <span className="num font-semibold text-[color:var(--foreground)]/80">{formatCurrency(flight.historicalAvg)}</span>
+                        </p>
                       </div>
 
                       {/* Price History Chart */}
                       <div>
-                        <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Recent Price Trend</p>
+                        <p className="kicker mb-2.5">Recent Price Trend</p>
                         <div className="h-32">
                           <ResponsiveContainer width="100%" height="100%">
                             <LineChart data={flight.history.slice(-7)}>
-                              <XAxis dataKey="date" tick={{ fontSize: 9 }} tickLine={false} axisLine={false} />
-                              <YAxis tick={{ fontSize: 9 }} tickLine={false} axisLine={false} hide />
+                              <XAxis dataKey="date" tick={chartAxisTick} tickLine={false} axisLine={false} />
+                              <YAxis tick={chartAxisTick} tickLine={false} axisLine={false} hide />
                               <Tooltip
                                 contentStyle={chartTooltipContentStyle}
+                                cursor={{ stroke: CHART.grid, strokeWidth: 1.5 }}
                                 formatter={(value: unknown) => [`₹${Number(value).toLocaleString("en-IN")}`, "Avg"]}
                               />
-                              <Line type="monotone" dataKey="avgFare" stroke="#3B82F6" strokeWidth={2} dot={{ r: 3 }} />
+                              <Line type="monotone" dataKey="avgFare" stroke={CHART.accent} strokeWidth={2} dot={{ r: 2.5, fill: CHART.accent, strokeWidth: 0 }} activeDot={{ r: 4, strokeWidth: 2, stroke: "#fffdf9" }} />
                             </LineChart>
                           </ResponsiveContainer>
                         </div>

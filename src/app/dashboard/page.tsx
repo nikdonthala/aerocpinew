@@ -5,13 +5,13 @@ import { MetricCard } from "@/components/ui/MetricCard";
 import { DemoModeBanner } from "@/components/ui/DemoModeBanner";
 import {
   TrendingUp, Route, Radio, BarChart3,
-  Database, Shield, ArrowUpRight, ArrowDownRight, AlertTriangle, ExternalLink,
+  Database, Shield, ExternalLink, AlertTriangle,
 } from "lucide-react";
 import { getCurrentStats, generateIndexValues, generateRouteAnalytics, generateAnomalies } from "@/lib/demo-data";
-import { chartTooltipContentStyle, chartTooltipLabelStyle } from "@/lib/utils";
+import { chartTooltipContentStyle, chartTooltipLabelStyle, chartAxisTick, CHART } from "@/lib/utils";
 import Link from "next/link";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, AreaChart, Area, BarChart, Bar,
 } from "recharts";
 
@@ -40,27 +40,25 @@ export default function DashboardPage() {
     : 0;
 
   return (
-    <div>
+    <div className="animate-rise">
       <DemoModeBanner />
 
       {/* Editorial hero — National Airfare Overview */}
-      <section className="mb-8" aria-labelledby="hero-index-heading">
-        <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[color:var(--muted)] mb-3">
-          01 — National Airfare Overview
-        </p>
-        <div className="flex flex-wrap items-end gap-x-5 gap-y-2">
+      <section className="mb-10" aria-labelledby="hero-index-heading">
+        <p className="kicker mb-3">01 — National Airfare Overview</p>
+        <div className="flex flex-wrap items-end gap-x-6 gap-y-3">
           <h1
             id="hero-index-heading"
-            className="text-5xl sm:text-6xl font-semibold text-[color:var(--foreground)] tracking-tight leading-none"
+            className="num text-6xl sm:text-7xl text-[color:var(--foreground)] tracking-tight leading-none"
           >
-            <span className="num">{stats.currentIndex}</span>
+            {stats.currentIndex}
           </h1>
-          <div className="pb-1.5">
-            <p className="text-base font-semibold text-emerald-600">
+          <div className="pb-2">
+            <p className="text-base font-semibold text-[color:var(--up)]">
               +{stats.monthlyChange}%{" "}
               <span className="font-normal text-[color:var(--muted)]">vs previous month</span>
             </p>
-            <p className="text-sm text-[color:var(--muted)] mt-0.5">
+            <p className="text-sm text-[color:var(--muted)] mt-0.5 max-w-md">
               India Airfare Price Index — automated price intelligence across
               representative Indian domestic routes.
             </p>
@@ -69,7 +67,7 @@ export default function DashboardPage() {
       </section>
 
       {/* Index & Key Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
         <MetricCard
           title="India Airfare Price Index"
           value={stats.currentIndex.toString()}
@@ -102,7 +100,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Secondary Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 mb-10">
         <MetricCard title="Observations" value="1,24,580" icon={Database} compact />
         <MetricCard title="Routes" value="50" icon={Route} compact />
         <MetricCard title="Sources" value="10" icon={Radio} compact />
@@ -110,30 +108,26 @@ export default function DashboardPage() {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
         {/* Main Index Chart */}
-        <div className="lg:col-span-2 card p-6">
-          <div className="flex items-center justify-between mb-4">
+        <div className="lg:col-span-2 card p-6 sm:p-7">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 ">Airfare Price Index</h3>
-              <p className="text-sm text-gray-500 ">
+              <h3 className="text-xl text-[color:var(--foreground)]">Airfare Price Index</h3>
+              <p className="text-sm text-[color:var(--muted)] mt-0.5">
                 {PERIOD_LABELS[period] ?? "last 30 days"} ·{" "}
-                <span className={periodChange >= 0 ? "text-green-600 font-medium" : "text-red-500 font-medium"}>
+                <span className={periodChange >= 0 ? "text-[color:var(--up)] font-semibold num" : "text-[color:var(--down)] font-semibold num"}>
                   {periodChange >= 0 ? "+" : ""}{periodChange.toFixed(1)}%
                 </span>
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="seg" role="group" aria-label="Chart period">
               {["7D", "30D", "90D", "1Y"].map((p) => (
                 <button
                   key={p}
                   onClick={() => setPeriod(p)}
                   aria-pressed={period === p}
-                  className={`px-3 py-1 text-xs font-medium rounded-lg transition-colors ${
-                    p === period
-                      ? "bg-blue-100  text-blue-700 "
-                      : "text-gray-500 hover:bg-gray-100 "
-                  }`}
+                  data-active={p === period}
                 >
                   {p}
                 </button>
@@ -145,18 +139,19 @@ export default function DashboardPage() {
               <AreaChart data={recentIndex}>
                 <defs>
                   <linearGradient id="indexGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                    <stop offset="5%" stopColor={CHART.accent} stopOpacity={0.22} />
+                    <stop offset="95%" stopColor={CHART.accent} stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                <XAxis dataKey="date" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} tickFormatter={(v) => v.length > 7 ? v.slice(5) : v} />
-                <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} domain={["auto", "auto"]} />
+                <CartesianGrid strokeDasharray="4 6" stroke={CHART.grid} vertical={false} />
+                <XAxis dataKey="date" tick={chartAxisTick} tickLine={false} axisLine={false} tickFormatter={(v) => v.length > 7 ? v.slice(5) : v} />
+                <YAxis tick={chartAxisTick} tickLine={false} axisLine={false} domain={["auto", "auto"]} width={44} />
                 <Tooltip
                   contentStyle={chartTooltipContentStyle}
                   labelStyle={chartTooltipLabelStyle}
+                  cursor={{ stroke: CHART.grid, strokeWidth: 1.5 }}
                 />
-                <Area type="monotone" dataKey="indexValue" stroke="#3B82F6" strokeWidth={2} fill="url(#indexGrad)" />
+                <Area type="monotone" dataKey="indexValue" stroke={CHART.accent} strokeWidth={2.5} fill="url(#indexGrad)" dot={false} activeDot={{ r: 4, strokeWidth: 2, stroke: "#fffdf9" }} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -166,23 +161,23 @@ export default function DashboardPage() {
         <div className="space-y-6">
           {/* Top Routes */}
           <div className="card p-6">
-            <h3 className="text-lg font-semibold text-gray-900  mb-4">Top Routes</h3>
-            <div className="space-y-3">
+            <h3 className="text-lg text-[color:var(--foreground)] mb-4">Top Routes</h3>
+            <div className="space-y-1">
               {routeAnalytics.slice(0, 5).map((route) => (
                 <Link
                   key={route.routeId}
                   href={`/routes?route=${route.routeId}`}
-                  className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50  transition-colors"
+                  className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[color:var(--peach-soft)]/70 transition-colors"
                 >
                   <div>
-                    <span className="text-sm font-medium text-gray-900 ">
+                    <span className="text-sm font-semibold text-[color:var(--foreground)]">
                       {route.originCode} → {route.destCode}
                     </span>
-                    <p className="text-xs text-gray-400">₹{route.avgFare.toLocaleString("en-IN")} avg</p>
+                    <p className="text-xs text-[color:var(--muted)]">₹{route.avgFare.toLocaleString("en-IN")} avg</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-sm font-semibold text-gray-900 ">{route.index}</span>
-                    <p className={`text-xs font-medium ${route.mom >= 0 ? "text-red-500" : "text-green-500"}`}>
+                    <span className="num text-sm font-semibold text-[color:var(--foreground)]">{route.index}</span>
+                    <p className={`text-xs font-medium num ${route.mom >= 0 ? "text-[color:var(--up)]" : "text-[color:var(--down)]"}`}>
                       {route.mom >= 0 ? "+" : ""}{route.mom}%
                     </p>
                   </div>
@@ -194,28 +189,28 @@ export default function DashboardPage() {
           {/* Recent Anomalies */}
           <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 ">Recent Anomalies</h3>
-              <Link href="/anomalies" className="text-xs text-blue-600  hover:underline flex items-center gap-1">
+              <h3 className="text-lg text-[color:var(--foreground)]">Recent Anomalies</h3>
+              <Link href="/anomalies" className="text-xs font-semibold text-[color:var(--accent)] hover:text-[color:var(--accent-strong)] flex items-center gap-1 transition-colors">
                 View all <ExternalLink className="w-3 h-3" />
               </Link>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {anomalies.slice(0, 3).map((anomaly) => (
-                <div key={anomaly.id} className="flex items-start gap-3 p-2 rounded-lg bg-gray-50 ">
+                <div key={anomaly.id} className="flex items-start gap-3 p-2.5 rounded-xl bg-[color:var(--well)]/70">
                   <AlertTriangle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${
-                    anomaly.severity === "CRITICAL" ? "text-red-500" :
-                    anomaly.severity === "HIGH" ? "text-orange-500" :
-                    anomaly.severity === "MEDIUM" ? "text-yellow-500" : "text-blue-500"
+                    anomaly.severity === "CRITICAL" ? "text-[color:var(--up)]" :
+                    anomaly.severity === "HIGH" ? "text-[#c07a3d]" :
+                    anomaly.severity === "MEDIUM" ? "text-[#a98a3d]" : "text-[color:var(--cyan)]"
                   }`} />
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-gray-900 ">{anomaly.routeName}</p>
-                    <p className="text-xs text-gray-500 ">
+                    <p className="text-sm font-medium text-[color:var(--foreground)]">{anomaly.routeName}</p>
+                    <p className="text-xs text-[color:var(--muted)]">
                       ₹{anomaly.observedValue.toLocaleString("en-IN")} vs ₹{anomaly.referenceValue.toLocaleString("en-IN")} ({anomaly.deviation > 0 ? "+" : ""}{anomaly.deviation}%)
                     </p>
                     <span className={`inline-block mt-1 px-2 py-0.5 text-[10px] font-semibold rounded-full ${
-                      anomaly.severity === "CRITICAL" ? "bg-red-100 text-red-700" :
-                      anomaly.severity === "HIGH" ? "bg-orange-100 text-orange-700" :
-                      anomaly.severity === "MEDIUM" ? "bg-yellow-100 text-yellow-700" : "bg-blue-100 text-blue-700"
+                      anomaly.severity === "CRITICAL" ? "bg-[#f7e7e2] text-[color:var(--up)]" :
+                      anomaly.severity === "HIGH" ? "bg-[#f5e9dc] text-[#9a5f2c]" :
+                      anomaly.severity === "MEDIUM" ? "bg-[#f3ecda] text-[#8a6f2c]" : "bg-[color:var(--lavender-soft)] text-[color:var(--cyan)]"
                     }`}>
                       {anomaly.severity}
                     </span>
@@ -230,27 +225,28 @@ export default function DashboardPage() {
       {/* Bottom Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Route Comparison */}
-        <div className="card p-6">
-          <h3 className="text-lg font-semibold text-gray-900  mb-4">Route Index Comparison</h3>
+        <div className="card p-6 sm:p-7">
+          <h3 className="text-xl text-[color:var(--foreground)] mb-5">Route Index Comparison</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={routeAnalytics.slice(0, 7)} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                <XAxis type="number" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
-                <YAxis type="category" dataKey="routeId" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} width={80} />
+                <CartesianGrid strokeDasharray="4 6" stroke={CHART.grid} horizontal={false} />
+                <XAxis type="number" tick={chartAxisTick} tickLine={false} axisLine={false} />
+                <YAxis type="category" dataKey="routeId" tick={chartAxisTick} tickLine={false} axisLine={false} width={80} />
                 <Tooltip
                   contentStyle={chartTooltipContentStyle}
+                  cursor={{ fill: "rgba(174, 152, 122, 0.08)" }}
                 />
-                <Bar dataKey="index" fill="#3B82F6" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="index" fill={CHART.accent} radius={[0, 6, 6, 0]} barSize={14} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Source Status */}
-        <div className="card p-6">
-          <h3 className="text-lg font-semibold text-gray-900  mb-4">Data Source Health</h3>
-          <div className="space-y-3">
+        <div className="card p-6 sm:p-7">
+          <h3 className="text-xl text-[color:var(--foreground)] mb-5">Data Source Health</h3>
+          <div className="space-y-2.5">
             {[
               { name: "IndiGo Direct", status: "Active", records: "12,450", quality: 99.8 },
               { name: "Air India Direct", status: "Active", records: "10,820", quality: 99.5 },
@@ -259,20 +255,20 @@ export default function DashboardPage() {
               { name: "Cleartrip", status: "Delayed", records: "9,840", quality: 95.1 },
               { name: "Yatra", status: "Failed", records: "5,430", quality: 72.3 },
             ].map((src) => (
-              <div key={src.name} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 ">
+              <div key={src.name} className="flex items-center justify-between p-3 rounded-xl bg-[color:var(--well)]/70">
                 <div className="flex items-center gap-3">
-                  <div className={`w-2.5 h-2.5 rounded-full ${
-                    src.status === "Active" ? "bg-green-500" :
-                    src.status === "Delayed" ? "bg-yellow-500" : "bg-red-500"
+                  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                    src.status === "Active" ? "bg-[color:var(--down)]" :
+                    src.status === "Delayed" ? "bg-[#c9a23f]" : "bg-[color:var(--up)]"
                   }`} />
                   <div>
-                    <p className="text-sm font-medium text-gray-900 ">{src.name}</p>
-                    <p className="text-xs text-gray-400">{src.records} records</p>
+                    <p className="text-sm font-medium text-[color:var(--foreground)]">{src.name}</p>
+                    <p className="text-xs text-[color:var(--muted)]">{src.records} records</p>
                   </div>
                 </div>
-                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                  src.status === "Active" ? "bg-green-100 text-green-700" :
-                  src.status === "Delayed" ? "bg-yellow-100 text-yellow-700" : "bg-red-100 text-red-700"
+                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+                  src.status === "Active" ? "bg-[#e9efe6] text-[color:var(--down)]" :
+                  src.status === "Delayed" ? "bg-[#f3ecda] text-[#8a6f2c]" : "bg-[#f7e7e2] text-[color:var(--up)]"
                 }`}>
                   {src.status}
                 </span>

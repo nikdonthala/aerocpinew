@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { MetricCard } from "@/components/ui/MetricCard";
 import { Activity, Target, Eye } from "lucide-react";
 import { generateFareObservations, ROUTES, AIRLINES, generateWatchlist, generateAlerts, getPriceHistory, getBookingWindowAnalysis } from "@/lib/demo-data";
-import { chartTooltipContentStyle } from "@/lib/utils";
+import { chartTooltipContentStyle, chartAxisTick, CHART } from "@/lib/utils";
 import { formatCurrency } from "@/lib/utils";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -37,7 +37,7 @@ export default function PricesPage() {
   const historicalMax = priceHistory.length > 0 ? Math.max(...priceHistory.map(p => p.maxFare)) : 0;
 
   return (
-    <div>
+    <div className="animate-rise">
       <PageHeader
         title="Price Monitor"
         description="Track historical fares, booking windows, and watchlist"
@@ -45,11 +45,12 @@ export default function PricesPage() {
       />
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-4 mb-6">
+      <div className="flex flex-wrap gap-3 mb-7">
         <select
           value={selectedRoute}
           onChange={(e) => setSelectedRoute(e.target.value)}
-          className="px-4 py-2.5 bg-white  border border-[color:var(--border)]  rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="input !w-auto min-w-[13rem]"
+          aria-label="Route"
         >
           {ROUTES.map(r => (
             <option key={r.id} value={r.id}>{r.origin} → {r.destination}</option>
@@ -58,7 +59,8 @@ export default function PricesPage() {
         <select
           value={selectedAirline}
           onChange={(e) => setSelectedAirline(e.target.value)}
-          className="px-4 py-2.5 bg-white  border border-[color:var(--border)]  rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="input !w-auto min-w-[11rem]"
+          aria-label="Airline"
         >
           <option value="">All Airlines</option>
           {AIRLINES.map(a => (
@@ -68,7 +70,7 @@ export default function PricesPage() {
       </div>
 
       {/* Price Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-9">
         <MetricCard title="Current Average Fare" value={formatCurrency(currentFare)} compact />
         <MetricCard title="Historical Average" value={formatCurrency(historicalAvg)} compact />
         <MetricCard title="Historical Minimum" value={formatCurrency(historicalMin)} compact />
@@ -76,77 +78,81 @@ export default function PricesPage() {
       </div>
 
       {/* Price History Chart */}
-      <div className="card p-6 mb-8">
-        <h3 className="text-lg font-semibold text-gray-900  mb-4">Price History</h3>
+      <div className="card p-6 sm:p-7 mb-9">
+        <h3 className="text-xl text-[color:var(--foreground)] mb-5">Price History</h3>
         <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={priceHistory}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-              <XAxis dataKey="date" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
-              <YAxis tick={{ fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${(v/1000).toFixed(1)}k`} />
+              <CartesianGrid strokeDasharray="4 6" stroke={CHART.grid} vertical={false} />
+              <XAxis dataKey="date" tick={chartAxisTick} tickLine={false} axisLine={false} />
+              <YAxis tick={chartAxisTick} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${(v/1000).toFixed(1)}k`} width={48} />
               <Tooltip
                 contentStyle={chartTooltipContentStyle}
+                cursor={{ stroke: CHART.grid, strokeWidth: 1.5 }}
                 formatter={(value: unknown) => [`₹${Number(value).toLocaleString("en-IN")}`, ""]}
               />
-              <Line type="monotone" dataKey="maxFare" stroke="#EF4444" strokeWidth={1} dot={false} strokeDasharray="3 3" name="Max" />
-              <Line type="monotone" dataKey="avgFare" stroke="#3B82F6" strokeWidth={2.5} dot={false} name="Average" />
-              <Line type="monotone" dataKey="minFare" stroke="#22C55E" strokeWidth={1} dot={false} strokeDasharray="3 3" name="Min" />
+              <Line type="monotone" dataKey="maxFare" stroke={CHART.rose} strokeWidth={1.25} dot={false} strokeDasharray="4 4" name="Max" />
+              <Line type="monotone" dataKey="avgFare" stroke={CHART.accent} strokeWidth={2.5} dot={false} name="Average" />
+              <Line type="monotone" dataKey="minFare" stroke={CHART.down} strokeWidth={1.25} dot={false} strokeDasharray="4 4" name="Min" />
             </LineChart>
           </ResponsiveContainer>
         </div>
-        <div className="flex items-center gap-4 mt-2 text-xs text-gray-400">
-          <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-red-400 inline-block" /> Max</span>
-          <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-blue-500 inline-block" /> Average</span>
-          <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-green-400 inline-block" /> Min</span>
+        <div className="flex items-center gap-5 mt-3 text-xs text-[color:var(--muted)]">
+          <span className="flex items-center gap-1.5"><span className="w-3 h-0.5 bg-[#c98a94] inline-block rounded-full" /> Max</span>
+          <span className="flex items-center gap-1.5"><span className="w-3 h-0.5 bg-[color:var(--accent)] inline-block rounded-full" /> Average</span>
+          <span className="flex items-center gap-1.5"><span className="w-3 h-0.5 bg-[color:var(--down)] inline-block rounded-full" /> Min</span>
         </div>
       </div>
 
       {/* Booking Window Analysis */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div className="card p-6">
-          <h3 className="text-lg font-semibold text-gray-900  mb-4">Booking Window Analysis</h3>
-          <p className="text-sm text-gray-500  mb-4">How airfare varies with advance purchase</p>
-          <div className="h-48">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-9">
+        <div className="card p-6 sm:p-7">
+          <h3 className="text-xl text-[color:var(--foreground)] mb-1">Booking Window Analysis</h3>
+          <p className="text-sm text-[color:var(--muted)] mb-5">How airfare varies with advance purchase</p>
+          <div className="h-52">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={bwData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                <XAxis dataKey="bookingWindow" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
-                <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${(v/1000).toFixed(0)}k`} />
+                <CartesianGrid strokeDasharray="4 6" stroke={CHART.grid} vertical={false} />
+                <XAxis dataKey="bookingWindow" tick={chartAxisTick} tickLine={false} axisLine={false} />
+                <YAxis tick={chartAxisTick} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${(v/1000).toFixed(0)}k`} width={48} />
                 <Tooltip
                   contentStyle={chartTooltipContentStyle}
+                  cursor={{ fill: "rgba(174, 152, 122, 0.08)" }}
                   formatter={(value: unknown) => [`₹${Number(value).toLocaleString("en-IN")}`, "Avg Fare"]}
                 />
-                <Bar dataKey="avgFare" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="avgFare" fill={CHART.lavender} radius={[6, 6, 2, 2]} barSize={26} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Watchlist */}
-        <div className="card p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Eye className="w-5 h-5 text-blue-600 " />
-            <h3 className="text-lg font-semibold text-gray-900 ">Watchlist</h3>
+        <div className="card p-6 sm:p-7">
+          <div className="flex items-center gap-2.5 mb-5">
+            <div className="w-8 h-8 rounded-[0.7rem] bg-[color:var(--lavender-soft)] flex items-center justify-center">
+              <Eye className="w-4 h-4 text-[color:var(--cyan)]" />
+            </div>
+            <h3 className="text-xl text-[color:var(--foreground)]">Watchlist</h3>
           </div>
           <div className="space-y-3">
             {watchlist.map((item) => (
-              <div key={item.id} className="p-3 bg-gray-50  rounded-lg">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-semibold text-gray-900 ">{item.routeName}</span>
-                  <Target className="w-4 h-4 text-gray-400" />
+              <div key={item.id} className="p-3.5 bg-[color:var(--well)]/70 rounded-xl">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-sm font-semibold text-[color:var(--foreground)]">{item.routeName}</span>
+                  <Target className="w-4 h-4 text-[color:var(--muted)]" />
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-xs">
                   <div>
-                    <span className="text-gray-400">Target</span>
-                    <p className="font-medium text-gray-900 ">{formatCurrency(item.targetFare)}</p>
+                    <span className="text-[color:var(--muted)]">Target</span>
+                    <p className="num font-semibold text-[color:var(--foreground)]">{formatCurrency(item.targetFare)}</p>
                   </div>
                   <div>
-                    <span className="text-gray-400">Current</span>
-                    <p className="font-medium text-gray-900 ">{formatCurrency(item.currentFare)}</p>
+                    <span className="text-[color:var(--muted)]">Current</span>
+                    <p className="num font-semibold text-[color:var(--foreground)]">{formatCurrency(item.currentFare)}</p>
                   </div>
                   <div>
-                    <span className="text-gray-400">Status</span>
-                    <p className={`font-medium ${item.currentFare <= item.targetFare ? "text-green-600" : "text-red-600"}`}>
+                    <span className="text-[color:var(--muted)]">Status</span>
+                    <p className={`font-semibold ${item.currentFare <= item.targetFare ? "text-[color:var(--down)]" : "text-[color:var(--up)]"}`}>
                       {item.status}
                     </p>
                   </div>
@@ -158,15 +164,15 @@ export default function PricesPage() {
       </div>
 
       {/* Alerts */}
-      <div className="card p-6">
-        <h3 className="text-lg font-semibold text-gray-900  mb-4">Recent Alerts</h3>
-        <div className="space-y-2">
+      <div className="card p-6 sm:p-7">
+        <h3 className="text-xl text-[color:var(--foreground)] mb-5">Recent Alerts</h3>
+        <div className="space-y-2.5">
           {alerts.map((alert) => (
-            <div key={alert.id} className={`flex items-start gap-3 p-3 rounded-lg ${alert.read ? "bg-gray-50 /50" : "bg-blue-50 "}`}>
-              <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${alert.read ? "bg-gray-300" : "bg-blue-500"}`} />
+            <div key={alert.id} className={`flex items-start gap-3 p-3.5 rounded-xl ${alert.read ? "bg-[color:var(--well)]/50" : "bg-[color:var(--accent-soft)]/70"}`}>
+              <span className={`w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0 ${alert.read ? "bg-[color:var(--border)]" : "bg-[color:var(--accent)]"}`} />
               <div>
-                <p className="text-sm text-gray-700 ">{alert.message}</p>
-                <p className="text-xs text-gray-400 mt-1">{new Date(alert.timestamp).toLocaleString("en-IN")}</p>
+                <p className="text-sm text-[color:var(--foreground)]/85">{alert.message}</p>
+                <p className="text-xs text-[color:var(--muted)] mt-1">{new Date(alert.timestamp).toLocaleString("en-IN")}</p>
               </div>
             </div>
           ))}

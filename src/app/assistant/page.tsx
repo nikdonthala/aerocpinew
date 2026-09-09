@@ -125,7 +125,7 @@ export default function AssistantPage() {
         description="Ask natural-language questions about the AeroCPI airfare dataset"
         icon={Sparkles}
         badge="GPT-OSS-120B"
-        badgeColor="bg-cyan-100 text-cyan-800"
+        badgeColor="bg-[color:var(--lavender-soft)] text-[color:var(--cyan)]"
       />
 
       {/* Trust bar */}
@@ -146,8 +146,8 @@ export default function AssistantPage() {
         <div className="h-[480px] sm:h-[540px] overflow-y-auto p-4 sm:p-6 space-y-4">
           {messages.length === 0 && !loading && (
             <div className="h-full flex flex-col items-center justify-center text-center px-4">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[color:var(--accent-soft)] to-white border border-blue-100/60 flex items-center justify-center mb-4 shadow-sm">
-                <Sparkles className="w-7 h-7 text-[color:var(--accent)]" />
+              <div className="w-14 h-14 rounded-[1.1rem] bg-[color:var(--lavender-soft)] border border-[#ddd5ec] flex items-center justify-center mb-4 shadow-[0_8px_24px_-10px_rgba(126,107,168,0.4)]">
+                <Sparkles className="w-7 h-7 text-[color:var(--cyan)]" />
               </div>
               <h3 className="text-lg font-semibold text-[color:var(--foreground)] mb-1.5">
                 Ask about India&apos;s airfares
@@ -175,8 +175,8 @@ export default function AssistantPage() {
               <div
                 className={`max-w-[85%] sm:max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                   m.role === "user"
-                    ? "bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent-strong)] text-white rounded-br-md shadow-md shadow-blue-900/10"
-                    : "bg-white/80 border border-[color:var(--border)] text-[color:var(--foreground)] rounded-bl-md"
+                    ? "bg-[color:var(--accent)] text-[#fff8f2] rounded-br-md shadow-[0_8px_20px_-8px_rgba(176,83,44,0.5)]"
+                    : "bg-white/85 border border-[color:var(--border)] text-[color:var(--foreground)] rounded-bl-md"
                 }`}
               >
                 {m.role === "assistant" ? (
@@ -201,7 +201,7 @@ export default function AssistantPage() {
 
         {/* Error */}
         {error && (
-          <div className="mx-4 sm:mx-6 mb-3 flex items-start gap-2 px-3 py-2.5 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+          <div className="mx-4 sm:mx-6 mb-3 flex items-start gap-2 px-3 py-2.5 rounded-xl bg-[#f7e7e2]/80 border border-[#e8c8c0] text-sm text-[color:var(--up)]">
             <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
               {error}

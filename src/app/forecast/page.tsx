@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { MetricCard } from "@/components/ui/MetricCard";
 import { BarChart3, Info } from "lucide-react";
-import { generateForecasts, ROUTES, AIRLINES } from "@/lib/demo-data";
+import { generateForecasts, ROUTES } from "@/lib/demo-data";
 import { formatCurrency } from "@/lib/utils";
 
 export default function ForecastPage() {
@@ -15,20 +14,20 @@ export default function ForecastPage() {
   const route = ROUTES.find(r => r.id === selectedRoute);
 
   return (
-    <div>
+    <div className="animate-rise">
       <PageHeader
         title="Price Forecasting"
         description="ML-powered fare prediction ranges with confidence intervals"
         icon={BarChart3}
         badge="DEMO DATA"
-        badgeColor="bg-amber-100 text-amber-700"
+        badgeColor="bg-[color:var(--peach-soft)] text-[color:var(--accent-strong)]"
       />
 
-      <div className="bg-blue-50  border border-blue-200  rounded-xl p-4 mb-6 flex items-start gap-3">
-        <Info className="w-5 h-5 text-blue-600  flex-shrink-0 mt-0.5" />
+      <div className="bg-[color:var(--lavender-soft)]/70 border border-[#ddd5ec] rounded-2xl p-5 mb-8 flex items-start gap-3.5">
+        <Info className="w-5 h-5 text-[color:var(--cyan)] flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-sm font-medium text-blue-800 ">Model Transparency</p>
-          <p className="text-sm text-blue-700  mt-1">
+          <p className="text-sm font-semibold text-[#4c4370]">Model Transparency</p>
+          <p className="text-sm text-[#5d5578] mt-1 leading-relaxed">
             Forecasts use historical fare patterns, booking window data, route seasonality, and day-of-week effects.
             Predictions are presented as <strong>model-estimated ranges</strong> — not guarantees.
           </p>
@@ -36,11 +35,12 @@ export default function ForecastPage() {
       </div>
 
       {/* Route Selector */}
-      <div className="mb-6">
+      <div className="mb-7">
         <select
           value={selectedRoute}
           onChange={(e) => setSelectedRoute(e.target.value)}
-          className="px-4 py-2.5 bg-white  border border-[color:var(--border)]  rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="input !w-auto min-w-[13rem]"
+          aria-label="Route"
         >
           {ROUTES.map(r => (
             <option key={r.id} value={r.id}>{r.origin} → {r.destination}</option>
@@ -50,55 +50,55 @@ export default function ForecastPage() {
 
       {/* Forecast Cards */}
       {routeForecasts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-9">
           {routeForecasts.map((fc) => (
             <div key={fc.id} className="card p-5">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-semibold text-gray-900 ">{fc.horizon}</span>
-                <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                  fc.confidence >= 75 ? "bg-green-100 text-green-700" :
-                  fc.confidence >= 60 ? "bg-yellow-100 text-yellow-700" :
-                  "bg-red-100 text-red-700"
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-sm font-semibold text-[color:var(--foreground)]">{fc.horizon}</span>
+                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold num ${
+                  fc.confidence >= 75 ? "bg-[#e9efe6] text-[color:var(--down)]" :
+                  fc.confidence >= 60 ? "bg-[#f3ecda] text-[#8a6f2c]" :
+                  "bg-[#f7e7e2] text-[color:var(--up)]"
                 }`}>
                   {fc.confidence}% confidence
                 </span>
               </div>
-              <div className="mb-3">
-                <p className="text-xs text-gray-400 mb-1">Predicted Range</p>
-                <p className="text-xl font-bold text-gray-900 ">
+              <div className="mb-4">
+                <p className="kicker mb-1.5">Predicted Range</p>
+                <p className="num text-xl text-[color:var(--foreground)]">
                   {formatCurrency(fc.predictedMin)} — {formatCurrency(fc.predictedMax)}
                 </p>
               </div>
               {/* Visual range bar */}
-              <div className="h-3 bg-gray-100  rounded-full overflow-hidden mb-3">
+              <div className="h-2.5 bg-[color:var(--well)] rounded-full overflow-hidden mb-4">
                 <div
-                  className="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full"
+                  className="h-full bg-gradient-to-r from-[#cf9d7d] to-[color:var(--accent)] rounded-full"
                   style={{
                     marginLeft: `${Math.max(0, (fc.predictedMin - 3000) / 100)}%`,
                     width: `${Math.min(80, (fc.predictedMax - fc.predictedMin) / 100)}%`,
                   }}
                 />
               </div>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-[color:var(--muted)]">
                 Model: {fc.modelVersion}
               </p>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-[color:var(--muted)]">
                 Generated: Sep 1, 2026
               </p>
             </div>
           ))}
         </div>
       ) : (
-        <div className="card p-12 text-center mb-8">
-          <BarChart3 className="w-12 h-12 text-gray-300  mx-auto mb-4" />
-          <p className="text-gray-500 ">No forecasts available for this route.</p>
+        <div className="card p-14 text-center mb-9">
+          <BarChart3 className="w-10 h-10 text-[color:var(--border)] mx-auto mb-4" />
+          <p className="text-[color:var(--muted)]">No forecasts available for this route.</p>
         </div>
       )}
 
       {/* Model Details */}
-      <div className="card p-6">
-        <h3 className="text-lg font-semibold text-gray-900  mb-4">Model Features</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="card p-6 sm:p-7">
+        <h3 className="text-xl text-[color:var(--foreground)] mb-5">Model Features</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
           {[
             "Historical Fare",
             "Days to Departure",
@@ -111,27 +111,27 @@ export default function ForecastPage() {
             "Seasonality",
             "Observed Availability",
           ].map((feature) => (
-            <div key={feature} className="flex items-center gap-2 px-3 py-2 bg-gray-50  rounded-lg">
-              <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-              <span className="text-sm text-gray-700 ">{feature}</span>
+            <div key={feature} className="flex items-center gap-2.5 px-3.5 py-2.5 bg-[color:var(--well)]/70 rounded-xl">
+              <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--accent)] flex-shrink-0" />
+              <span className="text-sm text-[color:var(--foreground)]/85">{feature}</span>
             </div>
           ))}
         </div>
 
-        <div className="mt-6 p-4 bg-gray-50  rounded-lg">
-          <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Model Version</p>
+        <div className="mt-6 p-5 bg-[color:var(--well)]/70 rounded-xl">
+          <p className="kicker mb-3">Model Version</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
             <div>
-              <p className="text-gray-400">Model</p>
-              <p className="font-medium text-gray-900 ">AeroForecast-v1</p>
+              <p className="text-[color:var(--muted)]">Model</p>
+              <p className="font-semibold text-[color:var(--foreground)]">AeroForecast-v1</p>
             </div>
             <div>
-              <p className="text-gray-400">Training Data Window</p>
-              <p className="font-medium text-gray-900 ">Demo dataset</p>
+              <p className="text-[color:var(--muted)]">Training Data Window</p>
+              <p className="font-semibold text-[color:var(--foreground)]">Demo dataset</p>
             </div>
             <div>
-              <p className="text-gray-400">Architecture</p>
-              <p className="font-medium text-gray-900 ">Gradient Boosting (sklearn)</p>
+              <p className="text-[color:var(--muted)]">Architecture</p>
+              <p className="font-semibold text-[color:var(--foreground)]">Gradient Boosting (sklearn)</p>
             </div>
           </div>
         </div>

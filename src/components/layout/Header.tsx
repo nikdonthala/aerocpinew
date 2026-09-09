@@ -5,7 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   Menu,
   Bell,
-  TrendingUp,
   Monitor,
   X,
   Sparkles,
@@ -14,6 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { useDemoMode } from "@/components/DemoModeProvider";
+import { BrandMark } from "./Sidebar";
 
 const mobileNav = [
   { name: "Overview", href: "/dashboard" },
@@ -61,21 +61,23 @@ export function Header() {
       <button
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         aria-label="Toggle navigation menu"
-        className="lg:hidden p-2 rounded-lg hover:bg-white/60"
+        className="lg:hidden p-2 rounded-lg hover:bg-white/70 transition-colors"
       >
         {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
 
-      <Link href="/" className="flex items-center gap-2 lg:hidden">
-        <div className="w-7 h-7 bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--cyan)] rounded-lg flex items-center justify-center">
-          <TrendingUp className="w-4 h-4 text-white" />
+      <Link href="/" className="flex items-center gap-2.5 lg:hidden">
+        <div className="w-8 h-8 bg-[color:var(--accent)] rounded-[0.6rem] flex items-center justify-center shadow-[0_4px_12px_-4px_rgba(176,83,44,0.5)]">
+          <BrandMark className="w-[18px] h-[18px] text-[#fff8f2]" />
         </div>
-        <span className="font-bold text-[color:var(--foreground)]">AeroCPI</span>
+        <span className="text-base text-[color:var(--foreground)] tracking-tight" style={{ fontFamily: "var(--font-fraunces), Georgia, serif", fontWeight: 560 }}>
+          AeroCPI
+        </span>
       </Link>
 
       {/* Global search (desktop) */}
       <div className="hidden md:flex items-center relative w-full max-w-sm">
-        <Search className="absolute left-3 w-4 h-4 text-[color:var(--muted)] pointer-events-none" />
+        <Search className="absolute left-3.5 w-4 h-4 text-[color:var(--muted)] pointer-events-none" />
         <input
           type="search"
           value={query}
@@ -83,7 +85,7 @@ export function Header() {
           onKeyDown={(e) => e.key === "Enter" && submitSearch()}
           placeholder="Search routes, airlines, datasets…"
           aria-label="Search routes, airlines and datasets"
-          className="w-full pl-9 pr-3 py-2 rounded-xl bg-white/60 border border-[color:var(--border)] text-sm text-[color:var(--foreground)] placeholder:text-[color:var(--muted)] focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)]/30 focus:border-[color:var(--accent)]/40 transition-colors"
+          className="input !rounded-full !pl-10 !py-2 !pr-4"
         />
       </div>
 
@@ -93,10 +95,10 @@ export function Header() {
       <div className="hidden lg:flex items-center gap-4 pr-1">
         <div className="flex items-center gap-2">
           <span className="relative flex h-2 w-2" aria-hidden="true">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[color:var(--down)] opacity-50" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[color:var(--down)]" />
           </span>
-          <span className="text-xs font-semibold text-emerald-700">
+          <span className="text-xs font-semibold text-[color:var(--down)]">
             {isDemoMode ? "Demo Pipeline" : "Data Pipeline Live"}
           </span>
         </div>
@@ -106,9 +108,9 @@ export function Header() {
       </div>
 
       {isDemoMode && (
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-amber-50/80 border border-amber-200 rounded-full">
-          <Monitor className="w-3.5 h-3.5 text-amber-600" />
-          <span className="text-xs font-semibold text-amber-700 uppercase tracking-wide">
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-[color:var(--peach-soft)] border border-[#ecd9c4] rounded-full">
+          <Monitor className="w-3.5 h-3.5 text-[color:var(--accent-strong)]" />
+          <span className="text-xs font-semibold text-[color:var(--accent-strong)] uppercase tracking-wide">
             Demo Data
           </span>
         </div>
@@ -117,7 +119,7 @@ export function Header() {
       <Link
         href="/assistant"
         aria-label="Open AI Assistant"
-        className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full pill bg-[color:var(--accent-soft)] text-[color:var(--accent)] hover:bg-blue-100 transition-colors"
+        className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full pill bg-[color:var(--lavender-soft)] text-[color:var(--cyan)] hover:brightness-[0.97] transition-all"
       >
         <Sparkles className="w-3.5 h-3.5" />
         Ask AI
@@ -126,48 +128,48 @@ export function Header() {
       <Link
         href="/admin/sources"
         aria-label="View notifications"
-        className="relative p-2 rounded-lg hover:bg-white/60"
+        className="relative p-2 rounded-lg hover:bg-white/70 transition-colors"
       >
         <Bell className="w-5 h-5 text-[color:var(--muted)]" />
-        <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+        <span className="absolute top-1 right-1 w-2 h-2 bg-[color:var(--up)] rounded-full ring-2 ring-[#fffdf9]" />
       </Link>
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="fixed inset-0 bg-[color:var(--ink-navy)]/50"
+            className="fixed inset-0 bg-[color:var(--ink-navy)]/45 backdrop-blur-[2px]"
             onClick={() => setMobileMenuOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 w-72 bg-[color:var(--surface)] shadow-xl">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[color:var(--border)]">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--cyan)] rounded-lg flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-white" />
+          <div className="fixed inset-y-0 left-0 w-72 bg-[color:var(--surface)] shadow-2xl animate-rise">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[color:var(--border)]/70">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 bg-[color:var(--accent)] rounded-[0.6rem] flex items-center justify-center">
+                  <BrandMark className="w-[18px] h-[18px] text-[#fff8f2]" />
                 </div>
-                <span className="text-lg font-bold text-[color:var(--foreground)]">
+                <span className="text-lg text-[color:var(--foreground)]" style={{ fontFamily: "var(--font-fraunces), Georgia, serif", fontWeight: 560 }}>
                   AeroCPI
                 </span>
               </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 aria-label="Close menu"
-                className="p-2 rounded-lg hover:bg-white/60"
+                className="p-2 rounded-lg hover:bg-white/70 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <nav className="px-3 py-4 space-y-1">
+            <nav className="px-3 py-4 space-y-0.5">
               {mobileNav.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={cn(
-                    "block px-3 py-2.5 rounded-xl text-sm font-medium",
+                    "block px-3 py-2.5 rounded-xl text-sm font-medium transition-colors",
                     pathname === item.href
                       ? "bg-[color:var(--accent-soft)] text-[color:var(--accent-strong)]"
-                      : "text-[color:var(--muted)] hover:bg-white/70"
+                      : "text-[color:var(--muted)] hover:bg-white/70 hover:text-[color:var(--foreground)]"
                   )}
                 >
                   {item.name}

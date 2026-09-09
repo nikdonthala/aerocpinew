@@ -3,6 +3,7 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { FileText, Download, Printer, FileSpreadsheet, File } from "lucide-react";
 import { getCurrentStats, generateRouteAnalytics, generateAnomalies, DATA_SOURCES } from "@/lib/demo-data";
+import { cn } from "@/lib/utils";
 
 export default function ReportsPage() {
   const stats = getCurrentStats();
@@ -63,8 +64,15 @@ export default function ReportsPage() {
   const activeSources = DATA_SOURCES.filter(s => s.status === "Active").length;
   const totalQuality = Math.round(DATA_SOURCES.reduce((a, b) => a + b.quality, 0) / DATA_SOURCES.length * 10) / 10;
 
+  const exportButtons = [
+    { icon: File, label: "Export PDF" },
+    { icon: FileSpreadsheet, label: "Export Excel" },
+    { icon: Download, label: "Export CSV" },
+    { icon: Printer, label: "Print Report" },
+  ];
+
   return (
-    <div>
+    <div className="animate-rise">
       <PageHeader
         title="Reports"
         description="Generate and export airfare intelligence reports"
@@ -72,13 +80,8 @@ export default function ReportsPage() {
       />
 
       {/* Export Options */}
-      <div className="flex flex-wrap gap-3 mb-8">
-        {[
-          { icon: File, label: "Export PDF", color: "bg-red-600 hover:bg-red-700" },
-          { icon: FileSpreadsheet, label: "Export Excel", color: "bg-green-600 hover:bg-green-700" },
-          { icon: Download, label: "Export CSV", color: "bg-blue-600 hover:bg-blue-700" },
-          { icon: Printer, label: "Print Report", color: "bg-gray-600 hover:bg-gray-700" },
-        ].map((btn) => (
+      <div className="flex flex-wrap gap-3 mb-9">
+        {exportButtons.map((btn) => (
           <button
             key={btn.label}
             onClick={() =>
@@ -86,9 +89,9 @@ export default function ReportsPage() {
                 ? window.print()
                 : handleExport(btn.label)
             }
-            className={`flex items-center gap-2 px-4 py-2.5 text-white text-sm font-semibold rounded-lg transition-colors ${btn.color}`}
+            className="btn-secondary flex items-center gap-2 px-4 py-2.5 text-sm"
           >
-            <btn.icon className="w-4 h-4" />
+            <btn.icon className="w-4 h-4 text-[color:var(--accent)]" />
             {btn.label}
           </button>
         ))}
@@ -97,55 +100,55 @@ export default function ReportsPage() {
       {/* Report Preview */}
       <div className="card overflow-hidden">
         {/* Report Header */}
-        <div className="bg-gradient-to-r from-slate-900 to-blue-900 p-6 text-white">
-          <div className="flex items-center justify-between">
+        <div className="bg-[color:var(--ink-navy)] p-7 text-[#f5efe6]">
+          <div className="flex items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold">Daily Airfare Intelligence Report</h2>
-              <p className="text-sm text-blue-200 mt-1">September 1, 2026 — AeroCPI Prototype</p>
+              <h2 className="text-xl">Daily Airfare Intelligence Report</h2>
+              <p className="text-sm text-[#c9bfae] mt-1.5">September 1, 2026 — AeroCPI Prototype</p>
             </div>
             <div className="text-right">
-              <p className="text-3xl font-bold">{stats.currentIndex}</p>
-              <p className="text-sm text-green-300">+{stats.dailyChange}% today</p>
+              <p className="num text-3xl">{stats.currentIndex}</p>
+              <p className="text-sm text-[#a8c39a] mt-0.5">+{stats.dailyChange}% today</p>
             </div>
           </div>
         </div>
 
-        <div className="p-6 space-y-8">
+        <div className="p-6 sm:p-8 space-y-9">
           {/* Index Summary */}
           <section>
-            <h3 className="text-lg font-semibold text-gray-900  mb-4">Index Summary</h3>
+            <h3 className="text-lg text-[color:var(--foreground)] mb-4">Index Summary</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="bg-gray-50  rounded-lg p-3">
-                <p className="text-xs text-gray-400">Current Index</p>
-                <p className="text-xl font-bold text-gray-900 ">{stats.currentIndex}</p>
+              <div className="bg-[color:var(--well)]/70 rounded-xl p-4">
+                <p className="kicker mb-1.5">Current Index</p>
+                <p className="num text-xl text-[color:var(--foreground)]">{stats.currentIndex}</p>
               </div>
-              <div className="bg-gray-50  rounded-lg p-3">
-                <p className="text-xs text-gray-400">Daily Change</p>
-                <p className="text-xl font-bold text-red-500">+{stats.dailyChange}%</p>
+              <div className="bg-[color:var(--well)]/70 rounded-xl p-4">
+                <p className="kicker mb-1.5">Daily Change</p>
+                <p className="num text-xl text-[color:var(--up)]">+{stats.dailyChange}%</p>
               </div>
-              <div className="bg-gray-50  rounded-lg p-3">
-                <p className="text-xs text-gray-400">Weekly Change</p>
-                <p className="text-xl font-bold text-red-500">+{stats.weeklyChange}%</p>
+              <div className="bg-[color:var(--well)]/70 rounded-xl p-4">
+                <p className="kicker mb-1.5">Weekly Change</p>
+                <p className="num text-xl text-[color:var(--up)]">+{stats.weeklyChange}%</p>
               </div>
-              <div className="bg-gray-50  rounded-lg p-3">
-                <p className="text-xs text-gray-400">Monthly Change</p>
-                <p className="text-xl font-bold text-red-500">+{stats.monthlyChange}%</p>
+              <div className="bg-[color:var(--well)]/70 rounded-xl p-4">
+                <p className="kicker mb-1.5">Monthly Change</p>
+                <p className="num text-xl text-[color:var(--up)]">+{stats.monthlyChange}%</p>
               </div>
             </div>
           </section>
 
           {/* Top Rising Routes */}
           <section>
-            <h3 className="text-lg font-semibold text-gray-900  mb-4">Top Rising Routes</h3>
+            <h3 className="text-lg text-[color:var(--foreground)] mb-4">Top Rising Routes</h3>
             <div className="space-y-2">
               {topRising.map((route, i) => (
-                <div key={route.routeId} className="flex items-center justify-between p-3 bg-red-50  rounded-lg">
+                <div key={route.routeId} className="flex items-center justify-between p-3.5 bg-[#f7e7e2]/60 rounded-xl">
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-bold text-gray-400">#{i + 1}</span>
-                    <span className="text-sm font-semibold text-gray-900 ">{route.routeId}</span>
-                    <span className="text-xs text-gray-500">₹{route.avgFare.toLocaleString("en-IN")} avg</span>
+                    <span className="num text-sm font-semibold text-[color:var(--muted)]">#{i + 1}</span>
+                    <span className="text-sm font-semibold text-[color:var(--foreground)]">{route.routeId}</span>
+                    <span className="text-xs text-[color:var(--muted)]">₹{route.avgFare.toLocaleString("en-IN")} avg</span>
                   </div>
-                  <span className="text-sm font-semibold text-red-500">+{route.mom}%</span>
+                  <span className="num text-sm font-semibold text-[color:var(--up)]">+{route.mom}%</span>
                 </div>
               ))}
             </div>
@@ -154,16 +157,16 @@ export default function ReportsPage() {
           {/* Top Falling Routes */}
           {topFalling.length > 0 && (
             <section>
-              <h3 className="text-lg font-semibold text-gray-900  mb-4">Top Falling Routes</h3>
+              <h3 className="text-lg text-[color:var(--foreground)] mb-4">Top Falling Routes</h3>
               <div className="space-y-2">
                 {topFalling.map((route, i) => (
-                  <div key={route.routeId} className="flex items-center justify-between p-3 bg-green-50  rounded-lg">
+                  <div key={route.routeId} className="flex items-center justify-between p-3.5 bg-[#e9efe6]/60 rounded-xl">
                     <div className="flex items-center gap-3">
-                      <span className="text-sm font-bold text-gray-400">#{i + 1}</span>
-                      <span className="text-sm font-semibold text-gray-900 ">{route.routeId}</span>
-                      <span className="text-xs text-gray-500">₹{route.avgFare.toLocaleString("en-IN")} avg</span>
+                      <span className="num text-sm font-semibold text-[color:var(--muted)]">#{i + 1}</span>
+                      <span className="text-sm font-semibold text-[color:var(--foreground)]">{route.routeId}</span>
+                      <span className="text-xs text-[color:var(--muted)]">₹{route.avgFare.toLocaleString("en-IN")} avg</span>
                     </div>
-                    <span className="text-sm font-semibold text-green-500">{route.mom}%</span>
+                    <span className="num text-sm font-semibold text-[color:var(--down)]">{route.mom}%</span>
                   </div>
                 ))}
               </div>
@@ -172,20 +175,21 @@ export default function ReportsPage() {
 
           {/* Anomalies */}
           <section>
-            <h3 className="text-lg font-semibold text-gray-900  mb-4">Anomalies Detected</h3>
+            <h3 className="text-lg text-[color:var(--foreground)] mb-4">Anomalies Detected</h3>
             <div className="space-y-2">
               {anomalies.map((a) => (
-                <div key={a.id} className="flex items-center justify-between p-3 bg-yellow-50  rounded-lg">
+                <div key={a.id} className="flex items-center justify-between p-3.5 bg-[#f3ecda]/60 rounded-xl">
                   <div>
-                    <span className="text-sm font-semibold text-gray-900 ">{a.routeName}</span>
-                    <span className="text-xs text-gray-500 ml-2">₹{a.observedValue.toLocaleString("en-IN")} vs ₹{a.referenceValue.toLocaleString("en-IN")}</span>
+                    <span className="text-sm font-semibold text-[color:var(--foreground)]">{a.routeName}</span>
+                    <span className="text-xs text-[color:var(--muted)] ml-2">₹{a.observedValue.toLocaleString("en-IN")} vs ₹{a.referenceValue.toLocaleString("en-IN")}</span>
                   </div>
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                    a.severity === "CRITICAL" ? "bg-red-100 text-red-700" :
-                    a.severity === "HIGH" ? "bg-orange-100 text-orange-700" :
-                    a.severity === "MEDIUM" ? "bg-yellow-100 text-yellow-700" :
-                    "bg-blue-100 text-blue-700"
-                  }`}>{a.severity}</span>
+                  <span className={cn(
+                    "px-2.5 py-1 rounded-full text-xs font-semibold",
+                    a.severity === "CRITICAL" ? "bg-[#f7e7e2] text-[color:var(--up)]" :
+                    a.severity === "HIGH" ? "bg-[#f5e9dc] text-[#9a5f2c]" :
+                    a.severity === "MEDIUM" ? "bg-[#f3ecda] text-[#8a6f2c]" :
+                    "bg-[color:var(--lavender-soft)] text-[color:var(--cyan)]"
+                  )}>{a.severity}</span>
                 </div>
               ))}
             </div>
@@ -193,29 +197,29 @@ export default function ReportsPage() {
 
           {/* Data Quality */}
           <section>
-            <h3 className="text-lg font-semibold text-gray-900  mb-4">Data Quality & Source Coverage</h3>
+            <h3 className="text-lg text-[color:var(--foreground)] mb-4">Data Quality & Source Coverage</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="bg-gray-50  rounded-lg p-3">
-                <p className="text-xs text-gray-400">Total Observations</p>
-                <p className="text-lg font-bold text-gray-900 ">{stats.totalObservations.toLocaleString("en-IN")}</p>
+              <div className="bg-[color:var(--well)]/70 rounded-xl p-4">
+                <p className="kicker mb-1.5">Total Observations</p>
+                <p className="num text-lg text-[color:var(--foreground)]">{stats.totalObservations.toLocaleString("en-IN")}</p>
               </div>
-              <div className="bg-gray-50  rounded-lg p-3">
-                <p className="text-xs text-gray-400">Active Sources</p>
-                <p className="text-lg font-bold text-gray-900 ">{activeSources}/{DATA_SOURCES.length}</p>
+              <div className="bg-[color:var(--well)]/70 rounded-xl p-4">
+                <p className="kicker mb-1.5">Active Sources</p>
+                <p className="num text-lg text-[color:var(--foreground)]">{activeSources}/{DATA_SOURCES.length}</p>
               </div>
-              <div className="bg-gray-50  rounded-lg p-3">
-                <p className="text-xs text-gray-400">Avg Quality Score</p>
-                <p className="text-lg font-bold text-green-600">{totalQuality}%</p>
+              <div className="bg-[color:var(--well)]/70 rounded-xl p-4">
+                <p className="kicker mb-1.5">Avg Quality Score</p>
+                <p className="num text-lg text-[color:var(--down)]">{totalQuality}%</p>
               </div>
-              <div className="bg-gray-50  rounded-lg p-3">
-                <p className="text-xs text-gray-400">Routes Monitored</p>
-                <p className="text-lg font-bold text-gray-900 ">{stats.routesMonitored}</p>
+              <div className="bg-[color:var(--well)]/70 rounded-xl p-4">
+                <p className="kicker mb-1.5">Routes Monitored</p>
+                <p className="num text-lg text-[color:var(--foreground)]">{stats.routesMonitored}</p>
               </div>
             </div>
           </section>
 
           {/* Footer */}
-          <div className="pt-4 border-t border-[color:var(--border)]  text-xs text-gray-400">
+          <div className="pt-5 border-t border-[color:var(--border)] text-xs text-[color:var(--muted)] leading-relaxed">
             <p>This report is generated from simulated data for demonstration purposes.</p>
             <p>AeroCPI Prototype — Not an official government index.</p>
           </div>

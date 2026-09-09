@@ -1,33 +1,42 @@
 @import "tailwindcss";
 
 /* ============================================================
-   AeroCPI Design System — Warm Ivory Premium
-   Shared philosophy with PulseAI: warm ivory base, soft warm
-   gradients, charcoal/navy ink, elegant blue/cyan accents.
+   AeroCPI Design System — "Warm Ivory Atelier"
+   Inspired by Apple & Anthropic: warm ivory canvas, soft
+   peach/pink/lavender mesh light, clay accent, editorial serif
+   display type, generous spacing, thin borders, soft shadows.
    ============================================================ */
 
 :root {
-  /* Warm ivory base */
-  --background: #faf7f2;
+  /* Warm ivory canvas */
+  --background: #faf8f3;
   --surface: #fffdf9;
-  --foreground: #1f2937; /* charcoal */
-  --muted: #6b7280;
-  --border: #e7e0d4;
+  --foreground: #292524;
+  --muted: #8a8378;
+  --border: #e7dfd1;
 
-  /* Elegant blue/cyan accents */
-  --accent: #1d4ed8;
-  --accent-strong: #1e40af;
-  --accent-soft: #e8eefc;
-  --cyan: #0891b2;
+  /* Clay accent (primary) + muted lavender (secondary, legacy --cyan) */
+  --accent: #b0532c;
+  --accent-strong: #8f431f;
+  --accent-soft: #f6e9df;
+  --cyan: #7e6ba8;
+  --lavender-soft: #efecf7;
+  --pink-soft: #f9eef0;
+  --peach-soft: #f8efe4;
+  --well: #f5f0e6;
+
+  /* Semantic fare movement */
+  --up: #b9605b;   /* fares rising */
+  --down: #5f7f5c; /* fares falling */
 
   /* Glass tokens */
-  --glass-bg: rgba(255, 255, 255, 0.55);
-  --glass-bg-strong: rgba(255, 255, 255, 0.72);
-  --glass-border: rgba(255, 255, 255, 0.65);
-  --glass-shadow: 0 8px 32px rgba(31, 41, 55, 0.08);
+  --glass-bg: rgba(255, 253, 249, 0.62);
+  --glass-bg-strong: rgba(255, 253, 249, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.72);
+  --glass-shadow: 0 20px 50px -24px rgba(90, 62, 40, 0.18);
 
-  /* Ink navy used in dark hero panels */
-  --ink-navy: #101828;
+  /* Deep warm ink (overlays, code) */
+  --ink-navy: #2b241e;
 }
 
 @theme inline {
@@ -42,6 +51,7 @@
   --color-ink-navy: var(--ink-navy);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
 }
 
 html,
@@ -55,43 +65,47 @@ body {
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01" on, "cv11" on;
 }
 
-/* Warm neutral ambient gradient behind the whole app —
-   soft lavender + peach glows layered over the ivory base */
+/* Warm mesh ambient light — peach, pink and lavender glows layered
+   over the ivory base. Fixed, behind everything, never interactive. */
 .aurora-warm {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(48rem 30rem at 8% -10%, rgba(30, 64, 175, 0.07), transparent 60%),
-    radial-gradient(40rem 26rem at 95% 8%, rgba(8, 145, 178, 0.06), transparent 60%),
-    radial-gradient(44rem 30rem at 88% 92%, rgba(167, 139, 250, 0.06), transparent 62%),
-    radial-gradient(40rem 28rem at 4% 88%, rgba(253, 186, 116, 0.07), transparent 60%),
+    radial-gradient(42rem 30rem at 10% -8%, rgba(244, 194, 154, 0.35), transparent 62%),
+    radial-gradient(36rem 26rem at 90% 2%, rgba(236, 196, 212, 0.32), transparent 60%),
+    radial-gradient(46rem 34rem at 98% 44%, rgba(206, 194, 233, 0.3), transparent 62%),
+    radial-gradient(38rem 28rem at -4% 56%, rgba(240, 214, 189, 0.26), transparent 58%),
+    radial-gradient(42rem 30rem at 68% 110%, rgba(214, 199, 236, 0.24), transparent 60%),
     var(--background);
 }
 
 /* ---------- Glassmorphism (use selectively!) ---------- */
 .glass {
   background: var(--glass-bg);
-  backdrop-filter: blur(14px) saturate(1.4);
-  -webkit-backdrop-filter: blur(14px) saturate(1.4);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(16px) saturate(1.35);
+  -webkit-backdrop-filter: blur(16px) saturate(1.35);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow:
+    0 1px 2px rgba(90, 62, 40, 0.04),
+    0 16px 40px -20px rgba(90, 62, 40, 0.16);
 }
 
 .glass-strong {
   background: var(--glass-bg-strong);
-  backdrop-filter: blur(20px) saturate(1.5);
-  -webkit-backdrop-filter: blur(20px) saturate(1.5);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 12px 40px rgba(31, 41, 55, 0.12);
+  backdrop-filter: blur(22px) saturate(1.45);
+  -webkit-backdrop-filter: blur(22px) saturate(1.45);
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  box-shadow: 0 24px 56px -24px rgba(90, 62, 40, 0.22);
 }
 
-/* Glass on dark hero panels */
+/* Glass on deep ink panels (mobile overlay, code blocks) */
 .glass-dark {
-  background: rgba(16, 24, 40, 0.55);
+  background: rgba(43, 36, 30, 0.55);
   backdrop-filter: blur(16px) saturate(1.3);
   -webkit-backdrop-filter: blur(16px) saturate(1.3);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -100,55 +114,81 @@ body {
 
 /* ---------- Refined cards ---------- */
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  box-shadow: 0 1px 3px rgba(31, 41, 55, 0.05);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  background: rgba(255, 253, 249, 0.86);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(219, 205, 182, 0.55);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 1px 2px rgba(87, 60, 38, 0.04),
+    0 12px 32px -18px rgba(87, 60, 38, 0.12);
+  transition:
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
 }
 
 .card:hover {
-  box-shadow: 0 4px 16px rgba(31, 41, 55, 0.08);
+  border-color: rgba(199, 180, 149, 0.6);
+  box-shadow:
+    0 2px 4px rgba(87, 60, 38, 0.05),
+    0 18px 44px -18px rgba(87, 60, 38, 0.17);
 }
 
 .card-glass {
   background: var(--glass-bg-strong);
-  backdrop-filter: blur(14px) saturate(1.4);
-  -webkit-backdrop-filter: blur(14px) saturate(1.4);
-  border: 1px solid var(--glass-border);
-  border-radius: 1rem;
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 1.25rem;
   box-shadow: var(--glass-shadow);
-  transition: box-shadow 0.2s ease;
+  transition:
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
 }
 
 .card-glass:hover {
-  box-shadow: 0 12px 40px rgba(31, 41, 55, 0.12);
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 26px 60px -26px rgba(90, 62, 40, 0.26);
 }
 
 /* ---------- Typography ----------
-   Editorial serif for headings (Fraunces), sans for body, and
-   tabular numerals for financial figures — see .num utility. */
+   Editorial serif (Fraunces) for headings and figures; clean
+   geometric sans for everything else. */
 h1, h2, h3, h4 {
   font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
-  letter-spacing: -0.015em;
+  font-weight: 550;
+  letter-spacing: -0.02em;
 }
 
-/* Financial-dashboard numerals: fixed-width digits so figures
-   align in tables, KPI cards and charts. */
+/* Financial figures: serif lining numerals, fixed-width so tables
+   and KPI rows align. */
 .num {
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.02em;
+  font-weight: 560;
+}
+
+/* Uppercase kicker/eyebrow labels */
+.kicker {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .text-gradient-accent {
-  background: linear-gradient(90deg, var(--accent), var(--cyan));
+  background: linear-gradient(92deg, var(--accent) 10%, var(--cyan) 90%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .text-gradient-light {
-  background: linear-gradient(90deg, #93c5fd, #67e8f9);
+  background: linear-gradient(90deg, #e8c39a, #d8b7cf);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -156,25 +196,53 @@ h1, h2, h3, h4 {
 
 /* ---------- Buttons ---------- */
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  color: #fff;
-  border-radius: 0.75rem;
+  background: var(--accent);
+  color: #fff8f2;
+  border: 1px solid rgba(143, 67, 31, 0.6);
+  border-radius: 0.875rem;
   font-weight: 600;
+  letter-spacing: 0.01em;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.25);
+  box-shadow:
+    0 1px 2px rgba(143, 67, 31, 0.28),
+    0 10px 24px -10px rgba(176, 85, 44, 0.5);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 4px 16px rgba(29, 78, 216, 0.35);
+  background: var(--accent-strong);
+  box-shadow:
+    0 2px 4px rgba(143, 67, 31, 0.3),
+    0 14px 30px -10px rgba(176, 85, 44, 0.55);
   transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: rgba(255, 253, 249, 0.85);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(87, 60, 38, 0.05);
+}
+
+.btn-secondary:hover {
+  background: #fffefb;
+  border-color: rgba(199, 180, 149, 0.75);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px -10px rgba(87, 60, 38, 0.18);
 }
 
 .btn-glass {
   background: var(--glass-bg);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 0.875rem;
   font-weight: 600;
   transition: all 0.2s ease;
 }
@@ -183,7 +251,45 @@ h1, h2, h3, h4 {
   background: var(--glass-bg-strong);
 }
 
-/* ---------- Status pills ---------- */
+/* ---------- Form controls ---------- */
+.input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: var(--foreground);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.input::placeholder {
+  color: rgba(138, 131, 120, 0.75);
+}
+
+.input:hover {
+  border-color: rgba(199, 180, 149, 0.8);
+}
+
+.input:focus {
+  outline: none;
+  background: #fffefb;
+  border-color: rgba(176, 85, 44, 0.5);
+  box-shadow: 0 0 0 3.5px rgba(176, 85, 44, 0.11);
+}
+
+select.input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8378' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+}
+
+/* ---------- Status pills & chips ---------- */
 .pill {
   display: inline-flex;
   align-items: center;
@@ -195,6 +301,81 @@ h1, h2, h3, h4 {
   letter-spacing: 0.02em;
 }
 
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.72);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--foreground);
+  transition: all 0.2s ease;
+}
+
+/* ---------- Segmented control ---------- */
+.seg {
+  display: inline-flex;
+  gap: 0.125rem;
+  padding: 0.25rem;
+  background: rgba(239, 233, 222, 0.75);
+  border: 1px solid var(--border);
+  border-radius: 0.875rem;
+}
+
+.seg button {
+  border-radius: 0.625rem;
+  padding: 0.375rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted);
+  transition: all 0.2s ease;
+}
+
+.seg button:hover {
+  color: var(--foreground);
+}
+
+.seg button[data-active="true"] {
+  background: #fffefb;
+  color: var(--accent-strong);
+  box-shadow: 0 1px 3px rgba(87, 60, 38, 0.14);
+}
+
+/* ---------- Tables ---------- */
+.table-lux th {
+  text-align: left;
+  padding: 0.8rem 1rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: rgba(250, 247, 242, 0.72);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.table-lux td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid rgba(231, 223, 209, 0.55);
+  vertical-align: middle;
+}
+
+.table-lux tbody tr {
+  transition: background 0.18s ease;
+}
+
+.table-lux tbody tr:hover {
+  background: rgba(248, 239, 228, 0.55);
+}
+
+.table-lux tbody tr:last-child td {
+  border-bottom: none;
+}
+
 /* ---------- Focus states (accessibility) ---------- */
 a:focus-visible,
 button:focus-visible,
@@ -203,10 +384,25 @@ select:focus-visible,
 textarea:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
 }
 
-/* ---------- Reduced motion ---------- */
+/* ---------- Motion ---------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-rise {
+  animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -228,10 +424,14 @@ textarea:focus-visible {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(31, 41, 55, 0.15);
+  background: rgba(138, 116, 90, 0.22);
   border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(31, 41, 55, 0.25);
+  background: rgba(138, 116, 90, 0.38);
+  border: 2px solid transparent;
+  background-clip: content-box;
 }

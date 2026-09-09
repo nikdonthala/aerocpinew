@@ -16,23 +16,23 @@ export function PageHeader({
   badgeColor = "bg-[color:var(--accent-soft)] text-[color:var(--accent-strong)]",
 }: PageHeaderProps) {
   return (
-    <div className="mb-8">
-      <div className="flex items-center gap-3 mb-2">
+    <div className="mb-9">
+      <div className="flex items-start gap-4">
         {Icon && (
-          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[color:var(--accent-soft)] to-white border border-blue-100/60 flex items-center justify-center shadow-sm">
+          <div className="w-11 h-11 rounded-[0.9rem] bg-[color:var(--accent-soft)] border border-[#ecd9c4]/70 flex items-center justify-center shadow-[0_4px_14px_-6px_rgba(176,83,44,0.25)] flex-shrink-0 mt-0.5">
             <Icon className="w-5 h-5 text-[color:var(--accent)]" />
           </div>
         )}
         <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-[color:var(--foreground)] tracking-tight">{title}</h1>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-3xl text-[color:var(--foreground)] tracking-tight leading-tight">{title}</h1>
             {badge && (
-              <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${badgeColor}`}>
+              <span className={`px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide ${badgeColor}`}>
                 {badge}
               </span>
             )}
           </div>
-          <p className="text-sm text-[color:var(--muted)]">{description}</p>
+          <p className="text-sm text-[color:var(--muted)] mt-1.5">{description}</p>
         </div>
       </div>
     </div>

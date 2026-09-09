@@ -27,7 +27,7 @@ export default function MapPage() {
   };
 
   return (
-    <div>
+    <div className="animate-rise">
       <PageHeader
         title="India Airfare Map"
         description="Visualize route activity, price index, and anomalies across India"
@@ -42,8 +42,8 @@ export default function MapPage() {
               {/* Simplified India outline */}
               <path
                 d="M250,80 L320,90 L370,120 L400,150 L410,180 L400,210 L390,230 L380,260 L360,290 L340,310 L310,340 L290,370 L270,390 L250,410 L230,420 L210,400 L190,380 L180,350 L175,320 L180,290 L190,260 L200,230 L210,200 L220,170 L230,140 L240,110 Z"
-                fill="#E5E7EB"
-                stroke="#D1D5DB"
+                fill="#efe8d9"
+                stroke="#dccfb8"
                 strokeWidth="2"
               />
 
@@ -54,7 +54,7 @@ export default function MapPage() {
                 if (!from || !to) return null;
 
                 const isSelected = selectedRoute === route.routeId;
-                const color = route.mom > 3 ? "#EF4444" : route.mom < -3 ? "#22C55E" : "#3B82F6";
+                const color = route.mom > 3 ? "#b9605b" : route.mom < -3 ? "#5f7f5c" : "#b0532c";
                 const strokeWidth = isSelected ? 4 : 2;
                 const opacity = selectedRoute && !isSelected ? 0.2 : 0.6;
 
@@ -77,7 +77,7 @@ export default function MapPage() {
                 if (!pos) return null;
                 return (
                   <g key={airport.iataCode}>
-                    <circle cx={pos.x} cy={pos.y} r={6} fill="#1E40AF" stroke="white" strokeWidth={2} />
+                    <circle cx={pos.x} cy={pos.y} r={6} fill="#8f431f" stroke="#fffdf9" strokeWidth={2} />
                     <text x={pos.x} y={pos.y - 12} textAnchor="middle" className="text-[10px] font-bold fill-gray-700 ">
                       {airport.iataCode}
                     </text>
@@ -88,15 +88,15 @@ export default function MapPage() {
           </div>
 
           {/* Legend */}
-          <div className="flex items-center gap-6 mt-4 text-xs text-gray-500">
+          <div className="flex items-center gap-6 mt-4 text-xs text-[color:var(--muted)]">
             <span className="flex items-center gap-1.5">
-              <span className="w-4 h-0.5 bg-red-500 inline-block" /> Rising routes (+3%+)
+              <span className="w-4 h-0.5 bg-[#b9605b] inline-block rounded-full" /> Rising routes (+3%+)
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-4 h-0.5 bg-green-500 inline-block" /> Falling routes (-3%+)
+              <span className="w-4 h-0.5 bg-[#5f7f5c] inline-block rounded-full" /> Falling routes (-3%+)
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-4 h-0.5 bg-blue-500 inline-block" /> Stable routes
+              <span className="w-4 h-0.5 bg-[#b0532c] inline-block rounded-full" /> Stable routes
             </span>
           </div>
         </div>
@@ -105,37 +105,37 @@ export default function MapPage() {
         <div className="space-y-4">
           {selected ? (
             <div className="card p-6">
-              <h3 className="text-lg font-semibold text-gray-900  mb-4">
+              <h3 className="text-xl text-[color:var(--foreground)] mb-5">
                 {selected.originCode} → {selected.destCode}
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 <div>
-                  <p className="text-xs text-gray-400">Current Index</p>
-                  <p className="text-2xl font-bold text-gray-900 ">{selected.index}</p>
+                  <p className="kicker mb-1">Current Index</p>
+                  <p className="num text-2xl text-[color:var(--foreground)]">{selected.index}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400">MoM Change</p>
-                  <p className={`text-lg font-semibold ${selected.mom >= 0 ? "text-red-500" : "text-green-500"}`}>
+                  <p className="kicker mb-1">MoM Change</p>
+                  <p className={`num text-lg font-semibold ${selected.mom >= 0 ? "text-[color:var(--up)]" : "text-[color:var(--down)]"}`}>
                     {selected.mom >= 0 ? "+" : ""}{selected.mom}%
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400">Average Fare</p>
-                  <p className="text-lg font-bold text-gray-900 ">
+                  <p className="kicker mb-1">Average Fare</p>
+                  <p className="num text-lg text-[color:var(--foreground)]">
                     {formatCurrency(selected.avgFare)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400">Observations</p>
-                  <p className="text-lg font-bold text-gray-900 ">
+                  <p className="kicker mb-1">Observations</p>
+                  <p className="num text-lg text-[color:var(--foreground)]">
                     {selected.observations.toLocaleString("en-IN")}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400">Trend</p>
-                  <p className={`text-lg font-bold ${
-                    selected.trend === "up" ? "text-red-500" :
-                    selected.trend === "down" ? "text-green-500" : "text-gray-500"
+                  <p className="kicker mb-1">Trend</p>
+                  <p className={`num text-lg font-semibold ${
+                    selected.trend === "up" ? "text-[color:var(--up)]" :
+                    selected.trend === "down" ? "text-[color:var(--down)]" : "text-[color:var(--muted)]"
                   }`}>
                     {selected.trend === "up" ? "↑ Rising" : selected.trend === "down" ? "↓ Falling" : "→ Stable"}
                   </p>
@@ -144,31 +144,31 @@ export default function MapPage() {
             </div>
           ) : (
             <div className="card p-6 text-center">
-              <MapIcon className="w-10 h-10 text-gray-300  mx-auto mb-3" />
-              <p className="text-sm text-gray-500 ">Click a route on the map to view details</p>
+              <MapIcon className="w-10 h-10 text-[color:var(--border)] mx-auto mb-3" />
+              <p className="text-sm text-[color:var(--muted)]">Click a route on the map to view details</p>
             </div>
           )}
 
           {/* Route List */}
           <div className="card p-6">
-            <h3 className="text-lg font-semibold text-gray-900  mb-4">All Routes</h3>
-            <div className="space-y-2">
+            <h3 className="text-xl text-[color:var(--foreground)] mb-4">All Routes</h3>
+            <div className="space-y-1">
               {routes.sort((a, b) => b.observations - a.observations).map((route) => (
                 <button
                   key={route.routeId}
                   onClick={() => setSelectedRoute(route.routeId)}
-                  className={`w-full flex items-center justify-between p-2.5 rounded-lg text-left transition-colors ${
+                  className={`w-full flex items-center justify-between p-2.5 rounded-xl text-left transition-colors ${
                     selectedRoute === route.routeId
-                      ? "bg-blue-50 "
-                      : "hover:bg-gray-50 "
+                      ? "bg-[color:var(--accent-soft)]/70"
+                      : "hover:bg-[color:var(--peach-soft)]/70"
                   }`}
                 >
                   <div>
-                    <span className="text-sm font-medium text-gray-900 ">{route.routeId}</span>
-                    <p className="text-xs text-gray-400">{route.observations.toLocaleString("en-IN")} obs</p>
+                    <span className="text-sm font-medium text-[color:var(--foreground)]">{route.routeId}</span>
+                    <p className="text-xs text-[color:var(--muted)]">{route.observations.toLocaleString("en-IN")} obs</p>
                   </div>
                   <div className="text-right">
-                    <span className={`text-xs font-semibold ${route.mom >= 0 ? "text-red-500" : "text-green-500"}`}>
+                    <span className={`num text-xs font-semibold ${route.mom >= 0 ? "text-[color:var(--up)]" : "text-[color:var(--down)]"}`}>
                       {route.mom >= 0 ? "+" : ""}{route.mom}%
                     </span>
                   </div>

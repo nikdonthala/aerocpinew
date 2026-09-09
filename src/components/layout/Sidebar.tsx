@@ -72,25 +72,25 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:shrink-0 lg:my-4 lg:ml-4 rounded-2xl glass overflow-hidden">
+    <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:shrink-0 lg:my-5 lg:ml-5 rounded-[1.4rem] glass overflow-hidden">
       <Link
         href="/"
-        className="flex items-center gap-2.5 px-5 py-5 border-b border-[color:var(--border)]"
+        className="flex items-center gap-3 px-5 py-5 border-b border-[color:var(--border)]/70"
       >
-        <div className="w-9 h-9 bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--cyan)] rounded-xl flex items-center justify-center shadow-md shadow-blue-900/10">
-          <BrandMark className="w-5 h-5 text-white" />
+        <div className="w-9 h-9 bg-[color:var(--accent)] rounded-[0.7rem] flex items-center justify-center shadow-[0_6px_16px_-6px_rgba(176,83,44,0.55)]">
+          <BrandMark className="w-5 h-5 text-[#fff8f2]" />
         </div>
         <div>
-          <span className="text-lg font-bold text-[color:var(--foreground)] tracking-tight">
+          <span className="text-lg text-[color:var(--foreground)] tracking-tight" style={{ fontFamily: "var(--font-fraunces), Georgia, serif", fontWeight: 560 }}>
             AeroCPI
           </span>
-          <p className="text-[10px] text-[color:var(--muted)] uppercase tracking-widest font-medium">
+          <p className="text-[10px] text-[color:var(--muted)] uppercase tracking-[0.18em] font-medium">
             Airfare Intelligence
           </p>
         </div>
       </Link>
 
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
         {navigation.map((item) => {
           const isActive =
             pathname === item.href || pathname.startsWith(item.href + "/");
@@ -100,9 +100,9 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "group flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200",
+                "group flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200",
                 isActive
-                  ? "bg-[color:var(--accent-soft)] text-[color:var(--accent-strong)] shadow-sm"
+                  ? "bg-[color:var(--accent-soft)] text-[color:var(--accent-strong)] font-semibold shadow-[inset_0_0_0_1px_rgba(176,83,44,0.14)]"
                   : "text-[color:var(--muted)] hover:bg-white/70 hover:text-[color:var(--foreground)] hover:translate-x-0.5",
                 isAI && !isActive && "text-[color:var(--cyan)]"
               )}
@@ -115,7 +115,7 @@ export function Sidebar() {
               />
               {item.name}
               {isAI && !isActive && (
-                <span className="ml-auto pill bg-[color:var(--accent-soft)] text-[color:var(--accent)] !py-0.5 !px-2">
+                <span className="ml-auto pill bg-[color:var(--lavender-soft)] text-[color:var(--cyan)] !py-0.5 !px-2">
                   AI
                 </span>
               )}
@@ -124,9 +124,13 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="px-3 py-4 border-t border-[color:var(--border)]">
-        <div className="px-3 py-2 text-xs text-[color:var(--muted)]">
-          AeroCPI v1.0 — Airfare Price Intelligence
+      <div className="px-5 py-4 border-t border-[color:var(--border)]/70">
+        <div className="flex items-center gap-2 text-xs text-[color:var(--muted)]">
+          <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[color:var(--down)] opacity-50" />
+            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[color:var(--down)]" />
+          </span>
+          AeroCPI v1.0 — Price Intelligence
         </div>
       </div>
     </aside>

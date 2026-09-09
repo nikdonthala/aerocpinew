@@ -4,7 +4,7 @@ import { useState } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Route, ArrowUpDown, Search } from "lucide-react";
 import { generateRouteAnalytics, getBookingWindowAnalysis } from "@/lib/demo-data";
-import { chartTooltipContentStyle } from "@/lib/utils";
+import { chartTooltipContentStyle, chartAxisTick, CHART } from "@/lib/utils";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer,
@@ -33,7 +33,7 @@ export default function RoutesPage() {
   }) : [];
 
   return (
-    <div>
+    <div className="animate-rise">
       <PageHeader
         title="Route Analytics"
         description="Airfare index and statistics by route"
@@ -43,13 +43,14 @@ export default function RoutesPage() {
       {/* Search */}
       <div className="mb-6">
         <div className="relative max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[color:var(--muted)] pointer-events-none" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search routes (e.g., DEL-BOM)"
-            className="w-full pl-10 pr-4 py-2.5 bg-white  border border-[color:var(--border)]  rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Search routes"
+            className="input !rounded-full !pl-10"
           />
         </div>
       </div>
@@ -57,10 +58,10 @@ export default function RoutesPage() {
       {/* Routes Table */}
       <div className="card overflow-hidden mb-8">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full table-lux">
             <thead>
-              <tr className="bg-gray-50  border-b border-[color:var(--border)] ">
-                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Route</th>
+              <tr>
+                <th>Route</th>
                 {[
                   { key: "index", label: "Index" },
                   { key: "mom", label: "MoM %" },
@@ -70,14 +71,14 @@ export default function RoutesPage() {
                   <th
                     key={col.key}
                     onClick={() => { setSortBy(col.key as typeof sortBy); setSortDir(sortDir === "asc" ? "desc" : "asc"); }}
-                    className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase cursor-pointer hover:text-gray-700"
+                    className="cursor-pointer hover:text-[color:var(--accent)] transition-colors"
                   >
                     <span className="flex items-center gap-1">
-                      {col.label} <ArrowUpDown className="w-3 h-3" />
+                      {col.label} <ArrowUpDown className="w-3 h-3 opacity-60" />
                     </span>
                   </th>
                 ))}
-                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Trend</th>
+                <th>Trend</th>
               </tr>
             </thead>
             <tbody>
@@ -85,24 +86,22 @@ export default function RoutesPage() {
                 <tr
                   key={route.routeId}
                   onClick={() => setSelectedRoute(route.routeId)}
-                  className={`border-b border-gray-100  cursor-pointer hover:bg-gray-50 /50 transition-colors ${
-                    selectedRoute === route.routeId ? "bg-blue-50 " : ""
-                  }`}
+                  className={`cursor-pointer ${selectedRoute === route.routeId ? "bg-[color:var(--accent-soft)]/60" : ""}`}
                 >
-                  <td className="px-4 py-3">
-                    <span className="text-sm font-semibold text-gray-900 ">{route.routeId}</span>
-                    <p className="text-xs text-gray-400">{route.origin} → {route.destination}</p>
+                  <td>
+                    <span className="text-sm font-semibold text-[color:var(--foreground)]">{route.routeId}</span>
+                    <p className="text-xs text-[color:var(--muted)]">{route.origin} → {route.destination}</p>
                   </td>
-                  <td className="px-4 py-3 text-sm font-semibold text-gray-900 ">{route.index}</td>
-                  <td className="px-4 py-3">
-                    <span className={`text-sm font-medium ${route.mom >= 0 ? "text-red-500" : "text-green-500"}`}>
+                  <td className="num text-sm font-semibold text-[color:var(--foreground)]">{route.index}</td>
+                  <td>
+                    <span className={`num text-sm font-medium ${route.mom >= 0 ? "text-[color:var(--up)]" : "text-[color:var(--down)]"}`}>
                       {route.mom >= 0 ? "+" : ""}{route.mom}%
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-700 ">₹{route.avgFare.toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700 ">{route.observations.toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3">
-                    <span className={`text-lg ${route.trend === "up" ? "text-red-500" : route.trend === "down" ? "text-green-500" : "text-gray-400"}`}>
+                  <td className="num text-sm text-[color:var(--foreground)]/85">₹{route.avgFare.toLocaleString("en-IN")}</td>
+                  <td className="num text-sm text-[color:var(--foreground)]/85">{route.observations.toLocaleString("en-IN")}</td>
+                  <td>
+                    <span className={`text-lg ${route.trend === "up" ? "text-[color:var(--up)]" : route.trend === "down" ? "text-[color:var(--down)]" : "text-[color:var(--muted)]"}`}>
                       {route.trend === "up" ? "↑" : route.trend === "down" ? "↓" : "→"}
                     </span>
                   </td>
@@ -115,45 +114,47 @@ export default function RoutesPage() {
 
       {/* Selected Route Detail */}
       {selectedRouteData && (
-        <div className="card p-6">
-          <h3 className="text-lg font-semibold text-gray-900  mb-2">
+        <div className="card-glass p-7 animate-rise">
+          <h3 className="text-2xl text-[color:var(--foreground)] mb-1">
             {selectedRouteData.originCode} → {selectedRouteData.destCode}
           </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+          <p className="text-sm text-[color:var(--muted)] mb-6">{selectedRouteData.origin} → {selectedRouteData.destination}</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 mb-7">
             <div>
-              <p className="text-xs text-gray-400">Current Index</p>
-              <p className="text-xl font-bold text-gray-900 ">{selectedRouteData.index}</p>
+              <p className="kicker mb-1">Current Index</p>
+              <p className="num text-2xl text-[color:var(--foreground)]">{selectedRouteData.index}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400">MoM Change</p>
-              <p className={`text-xl font-bold ${selectedRouteData.mom >= 0 ? "text-red-500" : "text-green-500"}`}>
+              <p className="kicker mb-1">MoM Change</p>
+              <p className={`num text-2xl ${selectedRouteData.mom >= 0 ? "text-[color:var(--up)]" : "text-[color:var(--down)]"}`}>
                 {selectedRouteData.mom >= 0 ? "+" : ""}{selectedRouteData.mom}%
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-400">Average Fare</p>
-              <p className="text-xl font-bold text-gray-900 ">₹{selectedRouteData.avgFare.toLocaleString("en-IN")}</p>
+              <p className="kicker mb-1">Average Fare</p>
+              <p className="num text-2xl text-[color:var(--foreground)]">₹{selectedRouteData.avgFare.toLocaleString("en-IN")}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400">Observations</p>
-              <p className="text-xl font-bold text-gray-900 ">{selectedRouteData.observations.toLocaleString("en-IN")}</p>
+              <p className="kicker mb-1">Observations</p>
+              <p className="num text-2xl text-[color:var(--foreground)]">{selectedRouteData.observations.toLocaleString("en-IN")}</p>
             </div>
           </div>
 
           {bwData.length > 0 && (
             <div>
-              <h4 className="text-sm font-semibold text-gray-700  mb-3">Booking Window Analysis</h4>
-              <div className="h-48">
+              <h4 className="kicker mb-3.5">Booking Window Analysis</h4>
+              <div className="h-52">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={bwData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                    <XAxis dataKey="bookingWindow" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
-                    <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${(v/1000).toFixed(0)}k`} />
+                    <CartesianGrid strokeDasharray="4 6" stroke={CHART.grid} vertical={false} />
+                    <XAxis dataKey="bookingWindow" tick={chartAxisTick} tickLine={false} axisLine={false} />
+                    <YAxis tick={chartAxisTick} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${(v/1000).toFixed(0)}k`} width={48} />
                     <Tooltip
                       contentStyle={chartTooltipContentStyle}
+                      cursor={{ fill: "rgba(174, 152, 122, 0.08)" }}
                       formatter={(value: unknown) => [`₹${Number(value).toLocaleString("en-IN")}`, "Avg Fare"]}
                     />
-                    <Bar dataKey="avgFare" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="avgFare" fill={CHART.accent} radius={[6, 6, 2, 2]} barSize={28} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
